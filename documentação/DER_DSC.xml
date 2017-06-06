@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <MER>
 	<Informacoes>
-		<Posicao Left="506" Top="0"/>
-		<TotalItens Valor="176"/>
+		<Posicao Left="0" Top="0"/>
+		<TotalItens Valor="180"/>
 		<Tipo Valor="CONCEITUAL"/>
 		<Versao Valor="2.0.0"/>
 		<Autor Valor=""/>
@@ -1133,15 +1133,15 @@
       <Especializacoes ehEsp="0"/>
     </Entidade>
     <Entidade nome="Peças" id="95">
-      <Left Valor="1252"/>
+      <Left Valor="1253"/>
       <Top Valor="244"/>
       <Width Valor="102"/>
       <Height Valor="66"/>
       <Fonte default="-1"/>
       <Atributos>
         <Atributo nome="cod_pec" id="110">
-          <Left Valor="1389"/>
-          <Top Valor="249"/>
+          <Left Valor="1390"/>
+          <Top Valor="252"/>
           <Width Valor="74"/>
           <Height Valor="16"/>
           <Fonte default="-1"/>
@@ -1173,7 +1173,7 @@
         </Atributo>
         <Atributo nome="descrição" id="119">
           <Left Valor="1389"/>
-          <Top Valor="275"/>
+          <Top Valor="284"/>
           <Width Valor="81"/>
           <Height Valor="16"/>
           <Fonte default="-1"/>
@@ -1197,6 +1197,38 @@
           <Ligacoes>
             <Ligacao Destino_ID="95">
               <MostraCardinalidade Valor="0" Card_id="121"/>
+              <Cardinalidades Cardinalidade="4"/>
+              <Orientacao Valor="0"/>
+              <Fraca Valor="0"/>
+            </Ligacao>
+          </Ligacoes>
+        </Atributo>
+        <Atributo nome="Nome" id="192">
+          <Left Valor="1390"/>
+          <Top Valor="268"/>
+          <Width Valor="59"/>
+          <Height Valor="16"/>
+          <Fonte default="-1"/>
+          <Atributos/>
+          <AtributosOcultos/>
+          <Dicionario></Dicionario>
+          <Nula Valor="0"/>
+          <Observacao></Observacao>
+          <Futuro></Futuro>
+          <Anexos/>
+          <MaxCard Valor="1"/>
+          <MinCard Valor="1"/>
+          <Composto Valor="0"/>
+          <Identificador Valor="0"/>
+          <Tipo Valor="Texto(1)"/>
+          <Multivalorado Valor="0"/>
+          <Orientacao Valor="3"/>
+          <TamAuto Valor="-1"/>
+          <Desvio Valor="10"/>
+          <BarraID Valor="193"/>
+          <Ligacoes>
+            <Ligacao Destino_ID="95">
+              <MostraCardinalidade Valor="0" Card_id="194"/>
               <Cardinalidades Cardinalidade="4"/>
               <Orientacao Valor="0"/>
               <Fraca Valor="0"/>
@@ -1502,7 +1534,7 @@
           <MostraCardinalidade Valor="-1" Card_id="126"/>
           <Cardinalidades Cardinalidade="4">
             <Cardinalidade nome="" id="126">
-              <Left Valor="777"/>
+              <Left Valor="781"/>
               <Top Valor="123"/>
               <Width Valor="40"/>
               <Height Valor="20"/>
