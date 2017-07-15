@@ -16,7 +16,7 @@ public class Peca implements Entidade{
     private int qtde;
     private float valor_compra;
     private float valor_venda;
-    Fornecedores fornecedor;
+    Fornecedor fornecedor;
 
     public String getDesc() {
         return desc;
@@ -34,7 +34,7 @@ public class Peca implements Entidade{
         return valor_venda;
     }
 
-    public Fornecedores getFornecedor() {
+    public Fornecedor getFornecedor() {
         return fornecedor;
     }
 
@@ -54,7 +54,7 @@ public class Peca implements Entidade{
         this.valor_venda = valor_venda;
     }
 
-    public void setFornecedor(Fornecedores fornecedor) {
+    public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
     
@@ -68,7 +68,7 @@ public class Peca implements Entidade{
         this.id = id;
     }
 
-    public Peca(int id, String desc, int qtde, float valor_compra, float valor_venda, Fornecedores fornecedor) {
+    public Peca(int id, String desc, int qtde, float valor_compra, float valor_venda, Fornecedor fornecedor) {
         this.id = id;
         this.desc = desc;
         this.qtde = qtde;
