@@ -68,7 +68,7 @@ public class Cliente extends Pessoa{
               cont++; 
             }
         
-        if(cont != nome.length())
+        if(cont == nome.length())
             throw new ViolacaoRegrasNegocioException("O nome do Cliente não pode ter numeros e/ou caracteres especiais!");
         
         this.nome = nome;
