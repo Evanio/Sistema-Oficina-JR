@@ -31,12 +31,12 @@ public class Servico implements Entidade{
     }  
 
     @Override
-    public int getID() {
+    public int getId() {
         return this.id;
     }
 
     @Override
-    public void setID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
     
