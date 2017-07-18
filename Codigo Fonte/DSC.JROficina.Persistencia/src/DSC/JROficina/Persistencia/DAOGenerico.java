@@ -63,9 +63,9 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
             
             if(sql.executeUpdate() > 0)
                 return true;
-            else 
+             else
                 return false;
-            
+         
         }catch(Exception ex){
             return false;
         }
