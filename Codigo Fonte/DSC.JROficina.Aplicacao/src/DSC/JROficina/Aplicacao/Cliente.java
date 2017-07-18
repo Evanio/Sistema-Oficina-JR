@@ -5,15 +5,23 @@
  */
 package DSC.JROficina.Aplicacao;
 
+import java.util.Objects;
+
 /**
  *
  * @author Rodrigo
  */
 public class Cliente extends Pessoa{
     private String cpf_cnpj;
-    private int tipo;
+    private TipoCliente tipo;
 
-    public Cliente(String nome, String telefone, int id, String endereco, String cpf_cnpj, int tipo) {
+    public Cliente() {
+        super();
+    }
+    
+    
+    
+    public Cliente(String nome, String telefone, int id, String endereco, String cpf_cnpj, TipoCliente tipo) {
         super(nome, telefone, id, endereco);
         this.tipo = tipo;
         this.cpf_cnpj = cpf_cnpj;
@@ -23,7 +31,7 @@ public class Cliente extends Pessoa{
         return cpf_cnpj;
     }
 
-    public int getTipo() {
+    public TipoCliente getTipo() {
         return tipo;
     }
 
@@ -31,7 +39,7 @@ public class Cliente extends Pessoa{
         this.cpf_cnpj = cpf_cnpj;
     }
 
-    public void setTipo(int tipo) {
+    public void setTipo(TipoCliente tipo) {
         this.tipo = tipo;
     }
 
@@ -60,11 +68,42 @@ public class Cliente extends Pessoa{
               cont++; 
             }
         
-        if(cont != nome.length())
+        if(cont == nome.length())
             throw new ViolacaoRegrasNegocioException("O nome do Cliente não pode ter numeros e/ou caracteres especiais!");
         
         this.nome = nome;
         }
     }
+    
+    @Override
+    public int hashCode(){
+        int hash = 7;
+        hash = 29 * hash + this.id;
+        hash = 29 * hash + Objects.hashCode(this.cpf_cnpj);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Cliente other = (Cliente) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!Objects.equals(this.cpf_cnpj, other.cpf_cnpj)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
         
 }

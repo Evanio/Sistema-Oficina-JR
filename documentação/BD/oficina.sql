@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 10-Jul-2017 às 21:55
--- Versão do servidor: 10.1.21-MariaDB
--- PHP Version: 7.1.1
+-- Generation Time: 16-Jul-2017 às 22:42
+-- Versão do servidor: 10.1.9-MariaDB
+-- PHP Version: 5.6.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,8 +17,33 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bd_oficina`
+-- Database: `oficina`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `apaga_cliente` (`id` INTEGER)  begin
+	delete from clientes where idpessoa_fk  = id;
+	delete from pessoas where idpessoa_pk = id;
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inserir_cliente` (`nomee` VARCHAR(40), `telefonee` VARCHAR(12), `enderecoo` VARCHAR(50), `cpff` VARCHAR(12), `tipoo` VARCHAR(10))  begin	
+	declare x integer; 
+
+	insert into pessoas (nome, telefone, endereco) values (nomee, telefonee, enderecoo);
+	select max(idpessoa_pk) into x from pessoas;
+	insert into clientes (idpessoa_fk, cpf, tipo) values (x, cpff, tipoo);
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_cliente` (`nomee` VARCHAR(40), `telefonee` VARCHAR(12), `enderecoo` VARCHAR(50), `cpff` VARCHAR(12), `tipoo` VARCHAR(10), `id` INTEGER)  begin
+	update pessoas set nome = nomee, telefone = telefonee, endereco = enderecoo where idpessoa_pk = id;
+	update clientes set cpf = cpff, tipo = tipoo where idpessoa_fk = id;
+
+end$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -28,7 +53,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `clientes` (
   `idpessoa_fk` int(11) NOT NULL,
-  `cpf` varchar(12) NOT NULL
+  `cpf` varchar(15) NOT NULL,
+  `tipo` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
