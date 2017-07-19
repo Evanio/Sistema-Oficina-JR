@@ -51,11 +51,9 @@ public class Cliente extends Pessoa{
     public void setNomee(String nome) throws ViolacaoRegrasNegocioException{
         if(nome == null)
             throw new ViolacaoRegrasNegocioException("O nome do Cliente não pode ficar vazio!"); 
-    
-        
         
         char c;
-        int cont = nome.length();
+        int cont = 0;
             
         //Verificação de numeros e/ou caracteres especiais
         for(int i =0; i<nome.length(); i++){
@@ -67,12 +65,12 @@ public class Cliente extends Pessoa{
             || (c == 'ô') || (c == 'õ') || (c == 'Ó') || (c == 'Ô') || (c == 'Õ')){
               cont++; 
             }
-        
-        if(cont == nome.length())
+        }
+        if(cont != nome.length())
             throw new ViolacaoRegrasNegocioException("O nome do Cliente não pode ter numeros e/ou caracteres especiais!");
         
         this.nome = nome;
-        }
+        
     }
     
     @Override
