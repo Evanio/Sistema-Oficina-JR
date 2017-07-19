@@ -124,7 +124,7 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         if(where.length() > 0)
             where += " and ";
         
-        where += campo + " = " + valor;
+        where += campo + " = '" + valor + "'";
         
         return this;
     }
