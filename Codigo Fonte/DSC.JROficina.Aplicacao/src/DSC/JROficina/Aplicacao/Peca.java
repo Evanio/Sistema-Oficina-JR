@@ -13,11 +13,33 @@ public class Peca implements Entidade{
 
     private int id;
     private String desc;
+    private String nome;
+    private String marca;
     private int qtde;
     private float valor_compra;
     private float valor_venda;
-    Fornecedor fornecedor;
+    private Fornecedor fornecedor = new Fornecedor();
 
+    public Peca() {
+        
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+   
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
     public String getDesc() {
         return desc;
     }
@@ -56,6 +78,10 @@ public class Peca implements Entidade{
 
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
+    }
+    
+    public int getIdFornecedor(){
+        return this.fornecedor.getId();
     }
     
     @Override

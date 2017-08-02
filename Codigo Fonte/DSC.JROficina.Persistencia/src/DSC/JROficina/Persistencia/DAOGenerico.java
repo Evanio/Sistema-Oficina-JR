@@ -89,8 +89,6 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         }
     }
 
- 
-
     @Override
     public T Abrir(int id) {
         try{
@@ -116,6 +114,15 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
             where += " and ";
         
         where += campo + " = " + Integer.toString(valor);
+        
+        return this;
+    }
+    
+    protected DAOGenerico<T> adicionaFiltro(String campo, float valor){
+        if(where.length() > 0)
+            where += " and ";
+        
+        where += campo + " = " + Float.toString(valor);
         
         return this;
     }
