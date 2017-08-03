@@ -101,6 +101,11 @@ public class Cliente extends Pessoa{
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return this.nome;
+    }
     
     
         

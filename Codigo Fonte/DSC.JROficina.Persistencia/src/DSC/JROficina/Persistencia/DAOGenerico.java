@@ -178,4 +178,22 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         return null;
     }
     
+    public DAOGenerico<T> verificaObjetoNome(String n) {
+   
+        try{
+        
+            String sqlfinal = this.getConsultaBuscar();
+            sqlfinal += " where nome = " + "'" + n + "'";
+        
+            PreparedStatement sql =  conexao.prepareStatement(sqlfinal);
+            
+            ResultSet resultado = sql.executeQuery(); 
+            
+            return (DAOGenerico<T>) this.setDados(resultado);
+        } catch(SQLException ex){
+        Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex); 
+        }  
+        return null;
+    }
+    
 }

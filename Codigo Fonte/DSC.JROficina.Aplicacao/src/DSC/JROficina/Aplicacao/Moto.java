@@ -14,8 +14,12 @@ public class Moto implements Entidade{
     private String marca;
     private String placa;
     private String ano; //deve ser revisado
-    private Cliente dono;
+    protected Cliente dono;
     private int id;
+    
+    public Moto(){
+        
+    }
 
     @Override
     public int getId() {
