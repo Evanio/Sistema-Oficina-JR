@@ -13,7 +13,7 @@ public class Moto implements Entidade{
     private String modelo;
     private String marca;
     private String placa;
-    private String ano; //deve ser revisado
+    private int ano; //deve ser revisado
     protected Cliente dono;
     private int id;
     
@@ -40,7 +40,7 @@ public class Moto implements Entidade{
     }
 
     public String getMarca() {
-        return marca;
+        return this.marca;
     }
 
     public void setMarca(String marca) {
@@ -55,11 +55,11 @@ public class Moto implements Entidade{
         this.placa = placa;
     }
 
-    public String getAno() {
+    public int getAno() {
         return ano;
     }
 
-    public void setAno(String ano) {
+    public void setAno(int ano) {
         this.ano = ano;
     }
 
@@ -71,7 +71,7 @@ public class Moto implements Entidade{
         this.dono = dono;
     }
 
-    public Moto(String modelo, String marca, String placa, String ano, Cliente dono, int id) {
+    public Moto(String modelo, String marca, String placa, int ano, Cliente dono, int id) {
         this.modelo = modelo;
         this.marca = marca;
         this.placa = placa;
