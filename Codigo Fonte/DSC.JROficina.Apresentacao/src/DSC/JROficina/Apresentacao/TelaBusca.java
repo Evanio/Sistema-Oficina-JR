@@ -44,7 +44,6 @@ public abstract class TelaBusca<T extends Entidade> extends javax.swing.JInterna
         preencheFiltro();
         
         List<T> listagem = repositorio.Buscar(filtro);
-        //where ainda ""
         preencheTabela(listagem);
     }
     
