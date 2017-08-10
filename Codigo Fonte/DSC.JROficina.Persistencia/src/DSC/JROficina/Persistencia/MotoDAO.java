@@ -109,4 +109,9 @@ public class MotoDAO extends DAOGenerico<Moto> implements MotoRepositorio{
         }
         return null;
     }
+
+    @Override
+    protected String getConsultaId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

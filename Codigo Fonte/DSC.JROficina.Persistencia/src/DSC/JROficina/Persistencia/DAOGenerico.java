@@ -1,6 +1,7 @@
 package DSC.JROficina.Persistencia;
 
 
+import DSC.JROficina.Aplicacao.Cliente;
 import DSC.JROficina.Aplicacao.Entidade;
 import DSC.JROficina.Aplicacao.Repositorio;
 import DSC.JROficina.Aplicacao.TipoCliente;
@@ -10,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +44,7 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
     protected abstract String getConsultaDelete();
     protected abstract String getConsultaAbrir();
     protected abstract String getConsultaBuscar();
+    protected abstract String getConsultaId();
     protected abstract void setBuscaFiltros(T filtro);
     
     protected abstract void setParametros(PreparedStatement sql, T obj);
@@ -135,6 +138,15 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         
         return this;
     }
+     
+     protected DAOGenerico<T> adicionaFiltro(String campo, Date valor){
+        if(where.length() > 0)
+            where += " and ";
+        
+        where += campo + " = '" + valor + "'";
+        
+        return this;
+    }
     
      protected DAOGenerico<T> adicionarFiltro(String campo, TipoCliente valor){
          if(where.length() > 0)
@@ -145,6 +157,14 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
          return this;
      }
     
+     protected DAOGenerico<T> adicionarFiltro(String campo, Cliente valor){
+         if(where.length() > 0)
+             where += " and ";
+         
+         where += campo + " = " + Integer.toString(valor.getId());
+         
+         return this;
+     }
     
     
     @Override
@@ -177,5 +197,28 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         
         return null;
     }
+    
+    public int BuscarUltimoId() {
+         try{
+             int x = 0;
+            
+            String sqlfinal = this.getConsultaId();
+            
+            PreparedStatement sql =  conexao.prepareStatement(sqlfinal);
+            
+            ResultSet resultado = sql.executeQuery();
+            
+            x = resultado.getInt("transacaofinanceira.max(id)");
+            
+            return x;
+        
+        } catch(SQLException ex){
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return 0;
+    }
+    
+    
     
 }

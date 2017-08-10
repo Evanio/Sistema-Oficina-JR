@@ -5,11 +5,17 @@
  */
 package DSC.JROficina.Aplicacao;
 
+import java.util.List;
+
 /**
  *
  * @author Rodrigo
  */
 public class Fornecedor extends Pessoa{
+
+    public static List<Fornecedor> Buscar(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     private String cnpj;
 
     public Fornecedor() {
@@ -39,8 +45,10 @@ public class Fornecedor extends Pessoa{
         return cnpj;
     }
     
-    
-    
+     @Override
+    public String toString() {
+        return this.nome;
+    }
     
   
     

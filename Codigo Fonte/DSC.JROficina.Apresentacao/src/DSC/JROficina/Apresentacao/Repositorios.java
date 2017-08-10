@@ -6,12 +6,16 @@
 package DSC.JROficina.Apresentacao;
 
 import DSC.JROficina.Aplicacao.ClienteRepositorio;
+import DSC.JROficina.Aplicacao.Compra;
+import DSC.JROficina.Aplicacao.CompraRepositorio;
 import DSC.JROficina.Aplicacao.FornecedorRepositorio;
 import DSC.JROficina.Aplicacao.MotoRepositorio;
 import DSC.JROficina.Aplicacao.PecaRepositorio;
+import DSC.JROficina.Aplicacao.Repositorio;
 import DSC.JROficina.Aplicacao.UsuarioRepositorio;
 import java.util.logging.Logger;
 import DSC.JROficina.Persistencia.ClienteDAO;
+import DSC.JROficina.Persistencia.CompraDAO;
 import DSC.JROficina.Persistencia.FornecedorDAO;
 import DSC.JROficina.Persistencia.MotoDAO;
 import DSC.JROficina.Persistencia.UsuarioDAO;
@@ -92,6 +96,20 @@ public class Repositorios {
                 Logger.getLogger(Repositorios.class.getName()).log(Level.SEVERE, null, ex);
             }
         return motoDAO;
+    }
+     
+    public static CompraRepositorio compraDAO = null; 
+
+    public static CompraRepositorio getCompraRepositorio() {
+          if(compraDAO == null)
+            try{
+                compraDAO = new CompraDAO();
+            }catch(ClassNotFoundException ex){
+                Logger.getLogger(Repositorios.class.getName()).log(Level.SEVERE, null, ex);
+            }catch(SQLException ex){
+                Logger.getLogger(Repositorios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return compraDAO;
     }
     
 }

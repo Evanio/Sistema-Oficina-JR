@@ -35,6 +35,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         mnuUsuario = new javax.swing.JMenuItem();
         mnuPecas = new javax.swing.JMenuItem();
         mnuMotos = new javax.swing.JMenuItem();
+        btnCompraEditar = new javax.swing.JMenuItem();
+        mnuCompras = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
@@ -87,6 +89,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
         mnuCadastro.add(mnuMotos);
+
+        btnCompraEditar.setText("CompraEditar");
+        btnCompraEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompraEditarActionPerformed(evt);
+            }
+        });
+        mnuCadastro.add(btnCompraEditar);
+
+        mnuCompras.setText("Compras");
+        mnuCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuComprasActionPerformed(evt);
+            }
+        });
+        mnuCadastro.add(mnuCompras);
 
         jMenuBar1.add(mnuCadastro);
 
@@ -148,6 +166,20 @@ public class TelaPrincipal extends javax.swing.JFrame {
         tela.setVisible(true);
     }//GEN-LAST:event_mnuMotosActionPerformed
 
+    private void mnuComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuComprasActionPerformed
+       CompraBuscar tela = new CompraBuscar(Repositorios.getCompraRepositorio(), MotoEditar.class);
+        
+        this.add(tela);
+        tela.setVisible(true);
+    }//GEN-LAST:event_mnuComprasActionPerformed
+
+    private void btnCompraEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompraEditarActionPerformed
+        CompraEditar tela = new CompraEditar(Repositorios.getPecaRepositorio(), AdcPeca.class);
+        
+        this.add(tela);
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnCompraEditarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -185,10 +217,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MnuFornecedores;
+    private javax.swing.JMenuItem btnCompraEditar;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu mnuCadastro;
     private javax.swing.JMenuItem mnuClientes;
+    private javax.swing.JMenuItem mnuCompras;
     private javax.swing.JMenuItem mnuMotos;
     private javax.swing.JMenuItem mnuPecas;
     private javax.swing.JMenuItem mnuUsuario;

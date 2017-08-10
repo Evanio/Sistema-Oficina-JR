@@ -116,4 +116,9 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
         }
         return null;
     }
+
+    @Override
+    protected String getConsultaId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
