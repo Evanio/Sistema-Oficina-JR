@@ -5,21 +5,26 @@
  */
 package DSC.JROficina.Apresentacao;
 
+import DSC.JROficina.Aplicacao.Fornecedor;
 import DSC.JROficina.Aplicacao.Peca;
 import DSC.JROficina.Aplicacao.Repositorio;
+import DSC.JROficina.Persistencia.PecaDAO;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Rodrigo
  */
-public class AdcPeca extends PecaBuscar {
+public class AdcPeca extends TelaBusca<Peca> {
 
-    /**
-     * Creates new form AdcPeca
-     */
     public AdcPeca(Repositorio<Peca> repositorio, Class tipo_tela) {
         super(repositorio, tipo_tela);
         initComponents();
+        filtro = new Peca();
+        this.repositorio = repositorio;
+        this.tipo_tela = tipo_tela;
         
     }
 
@@ -38,6 +43,8 @@ public class AdcPeca extends PecaBuscar {
         txtNome = new javax.swing.JTextField();
         btnBusca = new javax.swing.JButton();
         BtnAdcPeca = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtQtde = new javax.swing.JTextField();
 
         setClosable(true);
 
@@ -70,6 +77,8 @@ public class AdcPeca extends PecaBuscar {
             }
         });
 
+        jLabel2.setText("Quantidade: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -88,7 +97,12 @@ public class AdcPeca extends PecaBuscar {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(173, 173, 173)
-                        .addComponent(BtnAdcPeca)))
+                        .addComponent(BtnAdcPeca))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtQtde, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -101,9 +115,13 @@ public class AdcPeca extends PecaBuscar {
                     .addComponent(btnBusca))
                 .addGap(32, 32, 32)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtQtde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
                 .addComponent(BtnAdcPeca)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -116,14 +134,87 @@ public class AdcPeca extends PecaBuscar {
     private void BtnAdcPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAdcPecaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnAdcPecaActionPerformed
-
-
+      
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAdcPeca;
     private javax.swing.JButton btnBusca;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblBusca;
     private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtQtde;
     // End of variables declaration//GEN-END:variables
+   
+    
+    public Peca adcPeca(){
+        int x = retornaIdSelecionado();
+        Peca p = new Peca();
+        PecaDAO pp = null;
+        p = pp.Abrir(x);
+        p.setQtde(Integer.valueOf(txtQtde.getText()));
+        
+        return p;
+        
+    }
+
+    @Override
+    public int retornaIdSelecionado() {
+       int linha = tblBusca.getSelectedRow();
+       int id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       return id;
+    }
+
+    @Override
+    public void preencheFiltro() {
+        if(!txtNome.getText().isEmpty())
+            filtro.setNome(txtNome.getText());
+    }
+
+    @Override
+    public void preencheTabela(List<Peca> listagem) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");    
+        modelo.addColumn("Descrição");
+        modelo.addColumn("Estoque");
+        modelo.addColumn("Valor Venda");
+        modelo.addColumn("Marca");
+        
+         for(Peca c : listagem){
+            Vector linha = new Vector();
+            linha.add(c.getId());
+            linha.add(c.getNome());
+            linha.add(c.getDesc());
+            linha.add(c.getQtde());
+            linha.add(c.getValor_venda());
+            linha.add(c.getMarca());
+            
+            modelo.addRow(linha);
+            
+        }    
+        tblBusca.setModel(modelo);
+    }
+
+    @Override
+    public void limpaFiltro() {
+        filtro.setNome(null);
+        filtro.setId(0);
+        filtro.setDesc(null);
+        filtro.setQtde(-1);
+        filtro.setValor_compra(-1);
+        filtro.setValor_venda(-1);
+        filtro.setFornecedor(null);
+        filtro.setMarca(null);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
 }
