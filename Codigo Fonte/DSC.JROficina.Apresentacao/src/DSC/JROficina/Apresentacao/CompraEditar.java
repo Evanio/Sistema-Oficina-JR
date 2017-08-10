@@ -238,12 +238,14 @@ public class CompraEditar extends TelaEdicao {
 
     private void bntNovaPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNovaPecaActionPerformed
        AdcPeca aaa = new AdcPeca(Repositorios.getPecaRepositorio(), AdcPeca.class);
+       Peca x = new Peca();
        
        this.add(aaa);
        this.getParent().add(aaa);
        aaa.setVisible(true);
        this.setVisible(false);
-           
+       //x = aaa.adcPeca();
+      // this.setVisible(true);    
     }//GEN-LAST:event_bntNovaPecaActionPerformed
 
     private void bntAdcPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntAdcPecaActionPerformed
