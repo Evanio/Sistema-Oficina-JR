@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> {
     
-    private Connection conexao;
+    protected Connection conexao;
     
     protected String where = "";
     
@@ -207,11 +207,11 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
             PreparedStatement sql =  conexao.prepareStatement(sqlfinal);
             
             ResultSet resultado = sql.executeQuery();
-            
-            x = resultado.getInt("transacaofinanceira.max(id)");
+            if(resultado.next()){
+                x = resultado.getInt(1);
             
             return x;
-        
+            }
         } catch(SQLException ex){
             Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         }
