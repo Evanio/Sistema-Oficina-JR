@@ -33,9 +33,7 @@ public class Compra implements Entidade{
         this.status = status;
     }
    
-    public Compra(){
-        
-        
+    public Compra(){    
     }
     
     
