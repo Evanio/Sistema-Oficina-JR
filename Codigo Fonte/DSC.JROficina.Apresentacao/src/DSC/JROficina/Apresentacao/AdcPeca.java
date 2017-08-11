@@ -269,7 +269,7 @@ public Peca adcPeca(){
     }
 
     public int retornaIdSelecionado() {
-       int linha = 0;
+       int linha = -1;
        linha = tblBusca.getSelectedRow();
        int id = 0;
        
