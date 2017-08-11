@@ -103,6 +103,11 @@ public class CompraBuscar extends TelaBusca<Compra>  {
         });
 
         bntNovo.setText("Novo");
+        bntNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntNovoActionPerformed(evt);
+            }
+        });
 
         btnEditar.setText("Editar");
 
@@ -175,6 +180,10 @@ public class CompraBuscar extends TelaBusca<Compra>  {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         super.buscar();
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void bntNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNovoActionPerformed
+        super.novo();
+    }//GEN-LAST:event_bntNovoActionPerformed
 
     @Override
     public int retornaIdSelecionado() {

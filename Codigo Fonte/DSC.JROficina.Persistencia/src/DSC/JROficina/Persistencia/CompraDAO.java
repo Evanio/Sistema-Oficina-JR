@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import DSC.JROficina.Aplicacao.TranTemItem;
 import java.sql.Date;
+import java.sql.DriverManager;
 
 
 
@@ -29,10 +30,14 @@ import java.sql.Date;
  */
 public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     
-    private Connection conexao;
+    //private Connection conexao;
 
     public CompraDAO() throws ClassNotFoundException, SQLException {
         super();
+        
+        Class.forName("com.mysql.jdbc.Driver");
+        
+        conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/oficina","root","");
     }
     
     
@@ -105,8 +110,8 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
        try{
             sql.setInt(1, obj.getAliado().getId());
             sql.setInt(2, 1);
-            sql.setDate(3, (Date) obj.getData());
-            sql.setInt(4, obj.getStatus().getId());
+            sql.setDate(3, new java.sql.Date(obj.getData().getTime())); 
+            sql.setInt(4, 1 /*obj.getStatus().getId()*/);
             
             if(obj.getId() > 0)
                 sql.setInt(5, obj.getId());
@@ -182,10 +187,10 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     public boolean Salvar(Compra obj) {
         try{
             List<Peca> p = obj.getPecas();
-            PreparedStatement sql = null;
+            
             
             if(obj.getId() == 0){
-                sql = conexao.prepareStatement(getConsultaInsert());
+               PreparedStatement sql = conexao.prepareStatement(getConsultaInsert());
                 setParametros(sql, obj);
                 if(sql.executeUpdate() <= 0)
                     return false;
@@ -203,7 +208,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                 }                
                 
             } else{
-                sql = conexao.prepareStatement(getConsultaUpdate());
+               PreparedStatement sql = conexao.prepareStatement(getConsultaUpdate());
                 setParametros(sql, obj);
                 
                 if(sql.executeUpdate() <= 0)
@@ -234,11 +239,11 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             sql.setInt(3, p.getQtde());
             sql.setFloat(4, p.getValor_compra());
             
-            if(p.getId() > 0){
+        /*    if(p.getId() > 0){
                 sql.setInt(5, p.getId());
                 sql.setInt(6, obj.getId());
             }
-      
+      */
         }catch(SQLException ex){
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -247,7 +252,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
     @Override
     protected String getConsultaId() {
-        return "select max(id) form transacaofinanceira";
+        return "select max(idtran_pk) as idtran_pk from transacaofinanceira";
     }
 }
     

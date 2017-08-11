@@ -8,6 +8,7 @@ package DSC.JROficina.Persistencia;
 import DSC.JROficina.Aplicacao.Cliente;
 import DSC.JROficina.Aplicacao.ClienteRepositorio;
 import DSC.JROficina.Aplicacao.TipoCliente;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,9 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
 
     public ClienteDAO() throws ClassNotFoundException, SQLException {
         super();
+        Class.forName("com.mysql.jdbc.Driver");
+        
+        conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/oficina","root","");
     }
     
     @Override

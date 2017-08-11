@@ -5,19 +5,21 @@
  */
 package DSC.JROficina.Apresentacao;
 
-import DSC.JROficina.Aplicacao.CompraRepositorio;
 import DSC.JROficina.Aplicacao.Compra;
 import DSC.JROficina.Aplicacao.Fornecedor;
 import DSC.JROficina.Aplicacao.FornecedorRepositorio;
 import DSC.JROficina.Aplicacao.Peca;
 import DSC.JROficina.Aplicacao.Repositorio;
 import DSC.JROficina.Aplicacao.ViolacaoRegrasNegocioException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -27,13 +29,13 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author Rodrigo
  */
-public class CompraEditar extends TelaEdicao{
+public class CompraEditar extends TelaEdicao<Compra>{
     Repositorio<Peca> p;
     List<Peca> pecas;
     Peca pe;
     SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
     private float tot = 0;
-    
+    private Date data;   
     
     FornecedorRepositorio fornecedores = Repositorios.getFornecedorRepositorio();
     
@@ -41,21 +43,18 @@ public class CompraEditar extends TelaEdicao{
         
         initComponents();
         
-        entidade = new Compra();
-        
         pecas = new ArrayList<>();
         pe = new Peca();
-        
-        
         List<Fornecedor> lista = fornecedores.Buscar(null);
-        
         lista.add(0, null);
         ComboBoxModel modelos = new DefaultComboBoxModel(lista.toArray());
         cbxFornecedor.setModel(modelos); 
-        Date data = new Date(System.currentTimeMillis());   
+        data = new Date(System.currentTimeMillis());   
         txtData.setText(String.valueOf(formatarDate.format(data)));
        
         rolParcelas.setValue(1);
+        
+        entidade = new Compra();
      }
         
 
@@ -135,12 +134,31 @@ public class CompraEditar extends TelaEdicao{
         });
 
         btnRemoverPeca.setText("Remover Peça");
+        btnRemoverPeca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverPecaActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Valor Total:");
 
         jLabel5.setText("Parcelas:");
 
         jLabel6.setText("Vencimento:");
+
+        rolParcelas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rolParcelasMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                rolParcelasMouseEntered(evt);
+            }
+        });
+        rolParcelas.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rolParcelasKeyPressed(evt);
+            }
+        });
 
         txtVencimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,6 +180,11 @@ public class CompraEditar extends TelaEdicao{
         jLabel7.setText("Valor Parcela:");
 
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -199,7 +222,6 @@ public class CompraEditar extends TelaEdicao{
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtDesc))
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cbxFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -218,7 +240,8 @@ public class CompraEditar extends TelaEdicao{
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtVencimento, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtVencimento, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
@@ -230,26 +253,27 @@ public class CompraEditar extends TelaEdicao{
                         .addContainerGap()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel5))
+                        .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(47, 47, 47)
                         .addComponent(btnSalvar)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rolParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtParc, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(153, 153, 153)
                         .addComponent(btnCancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3)
-                        .addGap(110, 110, 110))))
+                        .addGap(110, 110, 110))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rolParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtParc, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +342,6 @@ public class CompraEditar extends TelaEdicao{
             pe = adcpeca.getPecas();
             txtDesc.setText(pe.toString());
             txtUni.setText(String.valueOf(pe.getValor_compra()));
-            txtParc.setText(String.valueOf(10));
         }
     }//GEN-LAST:event_bntNovaPecaActionPerformed
 
@@ -330,11 +353,37 @@ public class CompraEditar extends TelaEdicao{
         pe = null;
         txtValorTotal.setText(String.valueOf(tot));
         
+        float x = tot/(Integer)rolParcelas.getValue();
+        txtParc.setText(String.valueOf(x));
+        
     }//GEN-LAST:event_bntAdcPecaActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
        cancelar();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnRemoverPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverPecaActionPerformed
+        
+    }//GEN-LAST:event_btnRemoverPecaActionPerformed
+
+    private void rolParcelasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rolParcelasMouseClicked
+        float x = tot/(Integer)rolParcelas.getValue();
+        txtParc.setText(String.valueOf(x));
+    }//GEN-LAST:event_rolParcelasMouseClicked
+
+    private void rolParcelasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rolParcelasMouseEntered
+        float x = tot/(Integer)rolParcelas.getValue();
+        txtParc.setText(String.valueOf(x));
+    }//GEN-LAST:event_rolParcelasMouseEntered
+
+    private void rolParcelasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rolParcelasKeyPressed
+        float x = tot/(Integer)rolParcelas.getValue();
+        txtParc.setText(String.valueOf(x));
+    }//GEN-LAST:event_rolParcelasKeyPressed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        Salvar();
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -373,12 +422,24 @@ public class CompraEditar extends TelaEdicao{
 
     @Override
     public void carregaObjeto() throws ViolacaoRegrasNegocioException {
-      
+           
+       entidade.setPecas(pecas);
+       entidade.setData(data);       
+        try {
+            entidade.setVencimento((Date) formatarDate.parseObject(txtVencimento.getText()));
+        } catch (ParseException ex) {
+            Logger.getLogger(CompraEditar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       entidade.setValor(Float.valueOf(txtValorTotal.getText()));
+       entidade.setValor_parc(Float.valueOf(txtParc.getText()));
+       entidade.setParcelas((Integer) rolParcelas.getValue());
+       entidade.setAliado((Fornecedor) cbxFornecedor.getSelectedItem());
+       
     }
 
     @Override
     public boolean verificarCamposObrigatorios() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return !txtVencimento.getText().isEmpty() || cbxFornecedor.getSelectedItem() == null;
     }
 
     
@@ -405,6 +466,7 @@ public class CompraEditar extends TelaEdicao{
             linha.add(total);
             tot += total;
             modelo.addRow(linha);
+          
             
         }    
         tblPecas.setModel(modelo);
