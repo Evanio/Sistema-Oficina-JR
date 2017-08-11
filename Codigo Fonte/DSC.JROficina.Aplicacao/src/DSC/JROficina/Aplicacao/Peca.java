@@ -102,4 +102,22 @@ public class Peca implements Entidade{
         this.valor_venda = valor_venda;
         this.fornecedor = fornecedor;
     }
+
+    @Override
+    public String toString() {
+        String palavra;
+        palavra = this.getNome();
+        palavra += " ";
+        palavra += this.getDesc();
+        palavra += " ";
+        palavra += this.getMarca();
+        
+        return palavra;
+    }
+
+    
+
+    
+
+
 }
