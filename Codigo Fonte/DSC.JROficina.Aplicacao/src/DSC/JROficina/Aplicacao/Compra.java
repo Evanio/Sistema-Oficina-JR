@@ -19,18 +19,18 @@ public class Compra implements Entidade{
     private List<Peca> pecas;
     private Pessoa aliado;
     private Date data;
-    private StatusTransacao status;
+    private float valor_pago;
     private int parcelas;
     private double valor_parc; 
     private Date vencimento;
 
-    public Compra(int id, double valor, List<Peca> pecas, Pessoa aliado, Date data, StatusTransacao status) {
+    public Compra(int id, double valor, List<Peca> pecas, Pessoa aliado, Date data, float valor_pago) {
         this.id = id;
         this.valor = valor;
         this.pecas = pecas;
         this.aliado = aliado;
         this.data = data;
-        this.status = status;
+        this.valor_pago = valor_pago;
     }
    
     public Compra(){    
@@ -95,12 +95,12 @@ public class Compra implements Entidade{
         this.data = data;
     }
 
-    public StatusTransacao getStatus() {
-        return status;
+    public float getValor_pago() {
+        return valor_pago;
     }
 
-    public void setStatus(StatusTransacao status) {
-        this.status = status;
+    public void setValor_pago(float valor_pago) {
+        this.valor_pago = valor_pago;
     }
 
     public Date getVencimento() {

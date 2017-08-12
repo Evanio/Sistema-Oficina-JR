@@ -8,7 +8,6 @@ package DSC.JROficina.Persistencia;
 import DSC.JROficina.Aplicacao.Compra;
 import DSC.JROficina.Aplicacao.CompraRepositorio;
 import DSC.JROficina.Aplicacao.Peca;
-import DSC.JROficina.Aplicacao.StatusTransacao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import DSC.JROficina.Aplicacao.TranTemItem;
 import java.sql.Date;
 import java.sql.DriverManager;
 import DSC.JROficina.Persistencia.PecaDAO;
@@ -97,10 +95,10 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
         
         if(filtro.getAliado() != null)
            this.adicionaFiltro("transacaofinanceira.idpessoa_fk", filtro.getAliado().getId());
-        
+     /*   
         if(filtro.getStatus() != null)
            this.adicionaFiltro("transacaofinanceira.status", filtro.getStatus().getId());
-        
+       */ 
         if(filtro.getVencimento() != null)
            this.adicionaFiltro("transacaofinanceira.vencimento", filtro.getVencimento());
     
@@ -133,7 +131,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
         obj.setId(resultado.getInt("transacaofinanceira.idtran_pk"));
         obj.setValor(resultado.getFloat("tran_item.valor_total"));
         obj.setData(resultado.getDate("transacaofinanceira.data"));
-        obj.setStatus(StatusTransacao.Abrir( resultado.getInt("transacaofinanceira.status")));
+     //   obj.setStatus(StatusTransacao.Abrir( resultado.getInt("transacaofinanceira.status")));
         obj.setParcelas(resultado.getInt("parcelas.quantidade"));
         obj.setValor_parc(resultado.getFloat("parcelas.valor_mensal"));
         obj.setVencimento(resultado.getDate("parcelas.vencimento"));
@@ -150,7 +148,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
        return null;
     }
    
-     public List<TranTemItem> BuscarP(int id) {
+/*     public List<TranTemItem> BuscarP(int id) {
         List<TranTemItem> lista = new ArrayList<>();
         try{
             
@@ -184,7 +182,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
         }
        return null;
     }
-    
+    */
     public boolean Salvar(Compra obj) {
        List<Peca> p = obj.getPecas();
        

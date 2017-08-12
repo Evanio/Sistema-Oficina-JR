@@ -8,9 +8,7 @@ package DSC.JROficina.Apresentacao;
 import DSC.JROficina.Aplicacao.Compra;
 import DSC.JROficina.Aplicacao.Fornecedor;
 import DSC.JROficina.Aplicacao.FornecedorRepositorio;
-import DSC.JROficina.Aplicacao.Peca;
 import DSC.JROficina.Aplicacao.Repositorio;
-import DSC.JROficina.Aplicacao.StatusTransacao;
 import java.sql.Date;
 import java.util.List;
 import javax.swing.ComboBoxModel;
@@ -37,9 +35,8 @@ public class CompraBuscar extends TelaBusca<Compra>  {
         lista.add(0, null);
         
         ComboBoxModel modelo = new DefaultComboBoxModel(lista.toArray());
-        
-        ComboBoxModel model = new DefaultComboBoxModel(StatusTransacao.values());
-        cbxStatus.setModel(model);
+       
+       // cbxStatus.setModel(model);
         cbxFornecedor.setModel(modelo);
     }
 
@@ -221,7 +218,6 @@ public class CompraBuscar extends TelaBusca<Compra>  {
             linha.add(c.getId());
             linha.add(c.getAliado().getNome());
             linha.add(c.getData());
-            linha.add(c.getStatus().getDescricao());
                         
             modelo.addRow(linha);
             
@@ -231,10 +227,8 @@ public class CompraBuscar extends TelaBusca<Compra>  {
 
     @Override
     public void limpaFiltro() {
-        filtro.setData(null);
-            
+        filtro.setData(null);    
         this.filtro.setAliado(null);
-        this.filtro.setStatus(null);
     }
 
 
