@@ -43,7 +43,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
     @Override
     protected String getConsultaInsert() {
-        return "insert into transacaofinanceira(idpessoa_fk, tipo, data, status) values(?,?,?,?)";
+        return "insert into transacaofinanceira(idpessoa_fk, tipo, data, status, parcelas, valor_total, valor_pago) values(?,?,?,?,?,?,?)";
     }
 
     @Override
@@ -95,10 +95,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
         
         if(filtro.getAliado() != null)
            this.adicionaFiltro("transacaofinanceira.idpessoa_fk", filtro.getAliado().getId());
-     /*   
-        if(filtro.getStatus() != null)
-           this.adicionaFiltro("transacaofinanceira.status", filtro.getStatus().getId());
-       */ 
+
         if(filtro.getVencimento() != null)
            this.adicionaFiltro("transacaofinanceira.vencimento", filtro.getVencimento());
     
@@ -110,10 +107,13 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             sql.setInt(1, obj.getAliado().getId());
             sql.setInt(2, 1);
             sql.setDate(3, new java.sql.Date(obj.getData().getTime())); 
-            sql.setInt(4, 1 /*obj.getStatus().getId()*/);
+            sql.setInt(4, 1 );
+            sql.setInt(5, obj.getParcelas());
+            sql.setDouble(6, obj.getValor());
+            sql.setFloat(7, (float) obj.getValor_parc());
             
             if(obj.getId() > 0)
-                sql.setInt(5, obj.getId());
+                sql.setInt(8, obj.getId());
       
         }catch(SQLException ex){
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -194,14 +194,14 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                 if(sql.executeUpdate() <= 0)
                     return false;
                 
-                sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade, valor_total) values(?,?,?,?)");               
+                sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade) values(?,?,?)");               
                
                 int x = BuscarUltimoId();
-
+//passou daqui
                 for(Peca c : p){
                     obj.setId(x);
-                    this.setParametros(sql, obj, c);
-                    if(sql.executeUpdate() <= 0) 
+                    this.setParametros(sql, obj, c); //passou daqui
+                    if(sql.executeUpdate() <= 0)  //deu erro aqui;
                         return false;
                 }                
                 
@@ -219,7 +219,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                      return false;
 
 
-                sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade, valor_total) values(?,?,?,?)");
+                sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade) values(?,?,?)");
 
                 for(Peca c : p){
                    this.setParametros(sql, obj, c);
@@ -254,7 +254,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             sql.setInt(1, obj.getId());
             sql.setInt(2, p.getId());
             sql.setInt(3, p.getQtde());
-            sql.setDouble(4, Double.valueOf(p.getValor_compra() * p.getQtde()));
+           // sql.setDouble(4, Double.valueOf(p.getValor_compra() * p.getQtde()));
             
         /*    if(p.getId() > 0){
                 sql.setInt(5, p.getId());

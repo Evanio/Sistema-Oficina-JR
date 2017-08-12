@@ -21,21 +21,23 @@ public class Compra implements Entidade{
     private Date data;
     private float valor_pago;
     private int parcelas;
-    private double valor_parc; 
+    private float valor_parc; 
     private Date vencimento;
 
-    public Compra(int id, double valor, List<Peca> pecas, Pessoa aliado, Date data, float valor_pago) {
+    public Compra(int id, double valor, List<Peca> pecas, Pessoa aliado, Date data, float valor_pago, int parcelas, float valor_parc, Date vencimento) {
         this.id = id;
         this.valor = valor;
         this.pecas = pecas;
         this.aliado = aliado;
         this.data = data;
         this.valor_pago = valor_pago;
+        this.parcelas = parcelas;
+        this.valor_parc = valor_parc;
+        this.vencimento = vencimento;
     }
    
     public Compra(){    
     }
-    
     
     @Override
     public int getId(){
@@ -55,11 +57,11 @@ public class Compra implements Entidade{
         this.parcelas = parcelas;
     }
 
-    public double getValor_parc() {
+    public float getValor_parc() {
         return valor_parc;
     }
 
-    public void setValor_parc(double valor_parc) {
+    public void setValor_parc(float valor_parc) {
         this.valor_parc = valor_parc;
     }
     
