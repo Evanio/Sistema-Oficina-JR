@@ -14,15 +14,17 @@ import java.util.List;
  */
 public class Compra implements Entidade{
 
-    private int id;
-    private double valor;
-    private List<Peca> pecas;
-    private Pessoa aliado;
-    private Date data;
-    private float valor_pago;
-    private int parcelas;
-    private float valor_parc; 
-    private Date vencimento;
+    protected int id;
+    protected double valor;
+    protected List<Peca> pecas;
+    protected Pessoa aliado;
+    protected Date data;
+    protected float valor_pago;
+    protected int parcelas;
+    protected float valor_parc; 
+    protected Date vencimento;
+    protected int tipo = 1;
+    protected StatusTransacao status;
 
     public Compra(int id, double valor, List<Peca> pecas, Pessoa aliado, Date data, float valor_pago, int parcelas, float valor_parc, Date vencimento) {
         this.id = id;
@@ -37,6 +39,22 @@ public class Compra implements Entidade{
     }
    
     public Compra(){    
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public StatusTransacao getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusTransacao status) {
+        this.status = status;
     }
     
     @Override

@@ -10,6 +10,7 @@ import DSC.JROficina.Aplicacao.Fornecedor;
 import DSC.JROficina.Aplicacao.FornecedorRepositorio;
 import DSC.JROficina.Aplicacao.Peca;
 import DSC.JROficina.Aplicacao.Repositorio;
+import DSC.JROficina.Aplicacao.StatusTransacao;
 import DSC.JROficina.Aplicacao.ViolacaoRegrasNegocioException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,7 +59,10 @@ public class CompraEditar extends TelaEdicao<Compra>{
         txtPago.setText("0");
         txtTroco.setText("0");
         pe = new Peca();
-        
+        txtTroco.setEnabled(false);
+        txtRestante.setEnabled(false);
+        txtParc.setEnabled(false);
+        txtValorTotal.setEnabled(false);
      }
         
 
@@ -137,20 +141,6 @@ public class CompraEditar extends TelaEdicao<Compra>{
         jLabel5.setText("Parcelas:");
 
         jLabel6.setText("Vencimento:");
-
-        rolParcelas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                rolParcelasMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                rolParcelasMouseEntered(evt);
-            }
-        });
-        rolParcelas.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                rolParcelasKeyPressed(evt);
-            }
-        });
 
         txtVencimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -344,20 +334,16 @@ public class CompraEditar extends TelaEdicao<Compra>{
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnRemoverPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverPecaActionPerformed
-        
+        int x = this.retornaIdSelecionado();
+        Peca k = null;
+        for(Peca c : pecas){
+             if(c.getId() ==  x)
+               k  = c;
+         }
+       pecas.remove(k);
+        preencheTabela(pecas);
+        this.carregaCampos();
     }//GEN-LAST:event_btnRemoverPecaActionPerformed
-
-    private void rolParcelasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rolParcelasMouseClicked
-        this.carregaCampos();
-    }//GEN-LAST:event_rolParcelasMouseClicked
-
-    private void rolParcelasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rolParcelasMouseEntered
-        this.carregaCampos();
-    }//GEN-LAST:event_rolParcelasMouseEntered
-
-    private void rolParcelasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rolParcelasKeyPressed
-        this.carregaCampos();
-    }//GEN-LAST:event_rolParcelasKeyPressed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         Salvar();
@@ -400,7 +386,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
        txtParc.setText(String.valueOf(x / y));
        txtRestante.setText(String.valueOf(x));
        if(Float.valueOf(txtPago.getText()) > tot)
-           txtTroco.setText(String.valueOf(x));
+           txtTroco.setText(String.valueOf(x * (-1)));
     }
 
     @Override
@@ -418,8 +404,11 @@ public class CompraEditar extends TelaEdicao<Compra>{
        entidade.setParcelas((Integer) rolParcelas.getValue());
        entidade.setAliado((Fornecedor) cbxFornecedor.getSelectedItem());
        entidade.setValor_pago(Float.valueOf(txtPago.getText()));
-       
-       
+       if(Float.valueOf(txtPago.getText()) >= (Float.valueOf(txtValorTotal.getText())))
+           entidade.setStatus(StatusTransacao.PAGO);
+       else
+           entidade.setStatus(StatusTransacao.PENDENTE);
+       entidade.setTipo(1);
     }
 
     @Override
@@ -450,11 +439,16 @@ public class CompraEditar extends TelaEdicao<Compra>{
             double total = (c.getQtde() * c.getValor_compra());
             linha.add(total);
             tot += total;
-            modelo.addRow(linha);
-          
-            
+            modelo.addRow(linha);   
         }    
+         
         tblPecas.setModel(modelo);
         
     }
+    public int retornaIdSelecionado() {
+       int linha = tblPecas.getSelectedRow();
+       int id = Integer.parseInt(tblPecas.getModel().getValueAt(linha,0).toString());
+       return id;
+    }
+    
 }

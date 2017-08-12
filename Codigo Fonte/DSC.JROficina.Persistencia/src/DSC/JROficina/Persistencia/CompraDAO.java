@@ -98,9 +98,9 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     protected void setParametros(PreparedStatement sql, Compra obj) {
        try{
             sql.setInt(1, obj.getAliado().getId());
-            sql.setInt(2, 1);
+            sql.setInt(2, obj.getTipo());
             sql.setDate(3, new java.sql.Date(obj.getData().getTime())); 
-            sql.setInt(4, 1 );
+            sql.setInt(4, obj.getStatus().getId());
             sql.setInt(5, obj.getParcelas());
             sql.setDouble(6, obj.getValor());
             sql.setFloat(7, (float) obj.getValor_parc());
