@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Date;
 import java.sql.DriverManager;
-import DSC.JROficina.Persistencia.PecaDAO;
 
 
 
@@ -72,14 +71,9 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
     @Override
     protected String getConsultaBuscar() {
-        return "select transacaofinanceira.idtran_pk, transacaofinanceira.idpessoa_fk, transacaofinanceira.data, pessoas.idpessoa_pk,"
-            + " pessoas.nome, pessoas.telefone, pessoas.endereco, fornecedor.cnpj, fornecedor.idpessoa_fk,"
-            + " itemfinanceiro.iditem_pk, itemfinanceiro.valorunitario, pecas.nome, pecas.iditem_fk, pecas.marca,"
-            + " pecas.valor_compra, pecas.moto, tran_item.iditem_fk, tran_item.idtran_fk, tran_item.quantidade,"
-            + " tran_item.valor_total from pessoas join fornecedor on pessoas.idpessoa_pk = fornecedor.idpessoa_fk"
-            + " join transacaofinanceira on fornecedor.idpessoa_fk = transacaofinanceira.idpessoa_fk join tran_item"
-            + " on transacaofinanceira.idtran_pk = tran_item.idtran_fk join itemfinanceiro on tran_item.idtran_fk="
-            + " itemfinanceiro.iditem_pk join pecas on itemfinanceiro.iditem_pk = pecas.iditem_fk";
+        return "select transacaofinanceira.idtran_pk, transacaofinanceira.idpessoa_fk, transacaofinanceira.tipo,"
+            + " transacaofinanceira.data, transacaofinanceira.status, transacaofinanceira.parcelas, transacaofinanceira.valor_total,"
+                + " transacaofinanceira.valor_pago from transacaofinanceira";
     }
 
     @Override
@@ -98,7 +92,6 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
         if(filtro.getVencimento() != null)
            this.adicionaFiltro("transacaofinanceira.vencimento", filtro.getVencimento());
-    
     }
 
     @Override
@@ -122,67 +115,24 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
     @Override
     protected Compra setDados(ResultSet resultado) {
-       try{
-        Compra obj = new Compra();
-        ClienteDAO c = new ClienteDAO();
-        PecaDAO p = new PecaDAO();
-        List<Peca> pecas = new ArrayList<>();
-
-        obj.setId(resultado.getInt("transacaofinanceira.idtran_pk"));
-        obj.setValor(resultado.getFloat("tran_item.valor_total"));
-        obj.setData(resultado.getDate("transacaofinanceira.data"));
-     //   obj.setStatus(StatusTransacao.Abrir( resultado.getInt("transacaofinanceira.status")));
-        obj.setParcelas(resultado.getInt("parcelas.quantidade"));
-        obj.setValor_parc(resultado.getFloat("parcelas.valor_mensal"));
-        obj.setVencimento(resultado.getDate("parcelas.vencimento"));
-        obj.setAliado(c.Abrir(resultado.getInt("transacaofinanceira.idpessoa_fk")));
-        while(resultado.next())
-            pecas.add(p.Abrir(resultado.getInt("iditem_fk")));
-        obj.setPecas(pecas);
-
-        return obj;
-        } catch(Exception ex){
-            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        try{   
+            FornecedorDAO fornecedordao = new FornecedorDAO();
+            Compra obj = new Compra();
+            obj.setId(resultado.getInt("idtran_pk"));
+            obj.setAliado(fornecedordao.Abrir(resultado.getInt("idpessoa_fk")));
+            obj.setData(resultado.getDate("data"));
+            obj.setParcelas(resultado.getInt("parcelas"));
+            obj.setValor(resultado.getFloat("valor_total"));
+            obj.setValor_pago(resultado.getFloat("valor_pago"));
+            obj.setValor_parc((float) ((obj.getValor() - obj.getValor_pago()) / obj.getParcelas()));
+            //obj.setVencimento();
+            return obj;
+        }catch(Exception ex){
+            Logger.getLogger(FornecedorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-       return null;
-    }
-   
-/*     public List<TranTemItem> BuscarP(int id) {
-        List<TranTemItem> lista = new ArrayList<>();
-        try{
-            
-            String sqlfinal = "select iditem_fk, quantidade, valor_total from tran_item where idtran_fk = ";            
-            sqlfinal += id;
-            PreparedStatement sql =  conexao.prepareStatement(sqlfinal);
-            
-            ResultSet resultado = sql.executeQuery();
-            
-            while(resultado.next())
-                lista.add(this.setDadosItem(resultado));
-            
-            return lista;
-        
-        } catch(SQLException ex){
-            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         return null;
     }
 
-    private TranTemItem setDadosItem(ResultSet resultado) {
-        try{
-             TranTemItem t = new TranTemItem();
-             t.setItem(resultado.getInt("iditem_fk"));
-             t.setQuantidade(resultado.getInt("quantidade"));
-             t.setValor(resultado.getFloat("valor_total"));
-            return t;
-        } catch(Exception ex){
-            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       return null;
-    }
-    */
     public boolean Salvar(Compra obj) {
        List<Peca> p = obj.getPecas();
        
@@ -197,11 +147,10 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                 sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade) values(?,?,?)");               
                
                 int x = BuscarUltimoId();
-//passou daqui
                 for(Peca c : p){
                     obj.setId(x);
-                    this.setParametros(sql, obj, c); //passou daqui
-                    if(sql.executeUpdate() <= 0)  //deu erro aqui;
+                    this.setParametros(sql, obj, c); 
+                    if(sql.executeUpdate() <= 0) 
                         return false;
                 }                
                 
@@ -248,19 +197,69 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
       }
         
     
+    public List<Compra> Buscar(Compra filtro) {
+        
+        List<Compra> lista = new ArrayList<>();
+        List<Integer> tran_item = new ArrayList<>();
+        List<Peca> pecas = new ArrayList<>();
+        try{
+            
+            if(filtro != null)
+                this.setBuscaFiltros(filtro);
+            
+            String sqlfinal = this.getConsultaBuscar();
+            
+            if(!where.isEmpty())
+                sqlfinal += " where " + where;
+            
+            PreparedStatement sql =  conexao.prepareStatement(sqlfinal);
+            
+            ResultSet resultado = sql.executeQuery();
+            
+            while(resultado.next())
+                lista.add(this.setDados(resultado));
+            
+            for(Compra p : lista){
+                String consulta = "select iditem_fk, idtran_fk, quantidade from tran_item where idtran_fk = "+ String.valueOf(p.getId());
+                sql =  conexao.prepareStatement(consulta);
+                resultado = sql.executeQuery();
+                while(resultado.next()){
+                     PecaDAO pecadao;
+                    try {
+                        pecadao = pecadao = new PecaDAO();
+                        Peca pe = pecadao.Abrir(resultado.getInt("iditem_fk"));
+                        pe.setQtde(resultado.getInt("quantidade"));
+                        pecas.add(pe); 
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(CompraDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                      
+                }
+                p.setPecas(pecas);
+                pecas = new ArrayList<>();
+            }
+            
+            this.where = "";
+            
+            return lista;
+        
+        } catch(SQLException ex){
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
+    
+    
+    
     protected void setParametros(PreparedStatement sql, Compra obj, Peca p) {
        
         try{
             sql.setInt(1, obj.getId());
             sql.setInt(2, p.getId());
             sql.setInt(3, p.getQtde());
-           // sql.setDouble(4, Double.valueOf(p.getValor_compra() * p.getQtde()));
-            
-        /*    if(p.getId() > 0){
-                sql.setInt(5, p.getId());
-                sql.setInt(6, obj.getId());
-            }
-      */
+           
         }catch(SQLException ex){
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

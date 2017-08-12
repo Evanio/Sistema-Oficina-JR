@@ -178,9 +178,7 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
     
     @Override
     public List<T> Buscar(T filtro) {
-       
-        
-        
+             
         List<T> lista = new ArrayList<>();
         
         try{

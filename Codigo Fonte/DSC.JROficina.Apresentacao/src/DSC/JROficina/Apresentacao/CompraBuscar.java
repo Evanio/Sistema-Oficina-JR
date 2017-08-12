@@ -207,18 +207,22 @@ public class CompraBuscar extends TelaBusca<Compra>  {
         DefaultTableModel modelo = new DefaultTableModel();
         
         modelo.addColumn("ID");
-        modelo.addColumn("Placa");
-        modelo.addColumn("Modelo");    
-        modelo.addColumn("Marca");
-        modelo.addColumn("Ano");
-        modelo.addColumn("Cliente/Dono");
+        modelo.addColumn("Fornecedor");
+        modelo.addColumn("Data");
+        modelo.addColumn("Status");    
+        modelo.addColumn("Vencimento");
         
          for(Compra c : listagem){
             Vector linha = new Vector();
             linha.add(c.getId());
             linha.add(c.getAliado().getNome());
             linha.add(c.getData());
-                        
+            if(c.getValor_pago() >= c.getValor())
+                linha.add("Pago");
+            else
+                linha.add("Pendente");
+            linha.add(c.getVencimento());
+            
             modelo.addRow(linha);
             
         }    
