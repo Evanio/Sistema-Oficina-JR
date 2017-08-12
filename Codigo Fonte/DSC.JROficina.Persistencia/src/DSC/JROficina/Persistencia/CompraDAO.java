@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import DSC.JROficina.Aplicacao.TranTemItem;
 import java.sql.Date;
 import java.sql.DriverManager;
+import DSC.JROficina.Persistencia.PecaDAO;
 
 
 
@@ -30,7 +31,7 @@ import java.sql.DriverManager;
  */
 public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     
-    //private Connection conexao;
+    PreparedStatement sql;
 
     public CompraDAO() throws ClassNotFoundException, SQLException {
         super();
@@ -185,46 +186,64 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     }
     
     public boolean Salvar(Compra obj) {
-        try{
-            List<Peca> p = obj.getPecas();
-            
-            
+       List<Peca> p = obj.getPecas();
+       
+        try{ 
             if(obj.getId() == 0){
-               PreparedStatement sql = conexao.prepareStatement(getConsultaInsert());
+               sql = conexao.prepareStatement(getConsultaInsert());
                 setParametros(sql, obj);
+                
                 if(sql.executeUpdate() <= 0)
                     return false;
                 
-                sql = conexao.prepareStatement("insert into tram_item(iditem_fk, idtran_fk, quantidade, valor_total) values(?,?,?,?)");               
-                
+                sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade, valor_total) values(?,?,?,?)");               
+               
                 int x = BuscarUltimoId();
-                
+
                 for(Peca c : p){
                     obj.setId(x);
                     this.setParametros(sql, obj, c);
-                    
-                    if(sql.executeUpdate() <= 0)
+                    if(sql.executeUpdate() <= 0) 
                         return false;
                 }                
                 
             } else{
-               PreparedStatement sql = conexao.prepareStatement(getConsultaUpdate());
+                PreparedStatement sql = conexao.prepareStatement(getConsultaUpdate());
                 setParametros(sql, obj);
-                
+
                 if(sql.executeUpdate() <= 0)
-                    return false;
-                
-                sql = conexao.prepareStatement("update tran_item set idtram_fk = ?, iditem_fk = ?, quantidade = ?, valor_total = ? where idtran_fk = ? and iditem = ?");
-                
+                     return false;
+
+                sql = conexao.prepareStatement("delete tran_item where idtran_fk = ?");
+                sql.setInt(1, obj.getId());
+
+                if(sql.executeUpdate() <= 0)
+                     return false;
+
+
+                sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade, valor_total) values(?,?,?,?)");
+
                 for(Peca c : p){
-                    this.setParametros(sql, obj, c);
-                    
-                    if(sql.executeUpdate() <= 0)
-                        return false;
-                }  
+                   this.setParametros(sql, obj, c);
+                   if(sql.executeUpdate() <= 0) 
+                       return false;
+                } 
+                
             }
+            PecaDAO pecadao = new PecaDAO();
+            
+            for(Peca c : p){
+                Peca peca = pecadao.Abrir(c.getId());
+                peca.setFornecedor(c.getFornecedor());
+                peca.setQtde(peca.getQtde() + c.getQtde());
+                sql = conexao.prepareStatement(pecadao.getConsultaUpdate());
+                pecadao.setParametros(sql, peca);
+                
+                if(sql.executeUpdate() <= 0) 
+                    return false;
+             } 
            
-         return true;
+            return true;
         }catch(Exception ex){
             return false;
         }
@@ -237,7 +256,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             sql.setInt(1, obj.getId());
             sql.setInt(2, p.getId());
             sql.setInt(3, p.getQtde());
-            sql.setFloat(4, p.getValor_compra());
+            sql.setDouble(4, Double.valueOf(p.getValor_compra() * p.getQtde()));
             
         /*    if(p.getId() > 0){
                 sql.setInt(5, p.getId());
@@ -254,6 +273,12 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     protected String getConsultaId() {
         return "select max(idtran_pk) as idtran_pk from transacaofinanceira";
     }
+
+     
+    
+    
+    
+    
 }
     
     

@@ -121,6 +121,15 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         return this;
     }
     
+    protected DAOGenerico<T> adicionaFiltro(String campo, double valor) {
+       if(where.length() > 0)
+            where += " and ";
+        
+        where += campo + " = " + Double.toString(valor);
+        
+        return this;
+    }
+    
     protected DAOGenerico<T> adicionaFiltro(String campo, float valor){
         if(where.length() > 0)
             where += " and ";

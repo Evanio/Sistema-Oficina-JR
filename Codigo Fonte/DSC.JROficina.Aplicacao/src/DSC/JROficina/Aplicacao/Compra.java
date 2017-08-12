@@ -15,16 +15,16 @@ import java.util.List;
 public class Compra implements Entidade{
 
     private int id;
-    private float valor;
+    private double valor;
     private List<Peca> pecas;
     private Pessoa aliado;
     private Date data;
     private StatusTransacao status;
     private int parcelas;
-    private float valor_parc; 
+    private double valor_parc; 
     private Date vencimento;
 
-    public Compra(int id, float valor, List<Peca> pecas, Pessoa aliado, Date data, StatusTransacao status) {
+    public Compra(int id, double valor, List<Peca> pecas, Pessoa aliado, Date data, StatusTransacao status) {
         this.id = id;
         this.valor = valor;
         this.pecas = pecas;
@@ -55,15 +55,15 @@ public class Compra implements Entidade{
         this.parcelas = parcelas;
     }
 
-    public float getValor_parc() {
+    public double getValor_parc() {
         return valor_parc;
     }
 
-    public void setValor_parc(float valor_parc) {
+    public void setValor_parc(double valor_parc) {
         this.valor_parc = valor_parc;
     }
     
-    public float getValor() {
+    public double getValor() {
         return valor;
     }
 

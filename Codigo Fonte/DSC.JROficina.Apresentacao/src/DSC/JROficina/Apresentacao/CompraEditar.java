@@ -462,7 +462,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
             linha.add(c.getNome());
             linha.add(c.getQtde());
             linha.add(c.getValor_compra());
-            float total = (c.getQtde() * c.getValor_compra());
+            double total = (c.getQtde() * c.getValor_compra());
             linha.add(total);
             tot += total;
             modelo.addRow(linha);
