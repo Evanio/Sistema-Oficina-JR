@@ -11,6 +11,7 @@ import DSC.JROficina.Aplicacao.FornecedorRepositorio;
 import DSC.JROficina.Aplicacao.Repositorio;
 import DSC.JROficina.Aplicacao.StatusTransacao;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -25,6 +26,7 @@ import java.util.Vector;
 public class CompraBuscar extends TelaBusca<Compra>  {
 
     FornecedorRepositorio fornecedores = Repositorios.getFornecedorRepositorio();
+    SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
     
     public CompraBuscar(Repositorio<Compra> repositorio, Class tipo_tela) {
         super(repositorio, tipo_tela);
@@ -37,7 +39,8 @@ public class CompraBuscar extends TelaBusca<Compra>  {
         
         ComboBoxModel modelo = new DefaultComboBoxModel(lista.toArray());
        
-       // cbxStatus.setModel(model);
+        ComboBoxModel model = new DefaultComboBoxModel(StatusTransacao.values());
+        cbxStatus.setModel(model);
         cbxFornecedor.setModel(modelo);
     }
 
@@ -108,6 +111,11 @@ public class CompraBuscar extends TelaBusca<Compra>  {
         });
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -181,6 +189,10 @@ public class CompraBuscar extends TelaBusca<Compra>  {
         super.novo();
     }//GEN-LAST:event_bntNovoActionPerformed
 
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        super.editar();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
     @Override
     public int retornaIdSelecionado() {
        int linha = tblBusca.getSelectedRow();
@@ -191,12 +203,10 @@ public class CompraBuscar extends TelaBusca<Compra>  {
     @Override
     public void preencheFiltro() {
         this.filtro = new Compra();
-
         if(!fctData.getText().isEmpty())
             filtro.setData(Date.valueOf(fctData.getText()));
-
         this.filtro.setAliado((Fornecedor)cbxFornecedor.getSelectedItem());
-        //this.filtro.setStatus((StatusTransacao) cbxFornecedor.getSelectedItem());
+        this.filtro.setStatus((StatusTransacao) cbxStatus.getSelectedItem());
 
 }
 
@@ -215,12 +225,13 @@ public class CompraBuscar extends TelaBusca<Compra>  {
             Vector linha = new Vector();
             linha.add(c.getId());
             linha.add(c.getAliado().getNome());
-            linha.add(c.getData());
+            linha.add(formatarDate.format(c.getData()));
+           
             if(c.getValor_pago() >= c.getValor())
                 linha.add("Pago");
             else
                 linha.add("Pendente");
-            linha.add(c.getVencimento());
+             linha.add(formatarDate.format(c.getVencimento()));
             
             modelo.addRow(linha);
             

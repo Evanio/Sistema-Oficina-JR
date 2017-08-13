@@ -4,6 +4,7 @@ package DSC.JROficina.Persistencia;
 import DSC.JROficina.Aplicacao.Cliente;
 import DSC.JROficina.Aplicacao.Entidade;
 import DSC.JROficina.Aplicacao.Repositorio;
+import DSC.JROficina.Aplicacao.StatusTransacao;
 import DSC.JROficina.Aplicacao.TipoCliente;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -117,6 +118,15 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
             where += " and ";
         
         where += campo + " = " + Integer.toString(valor);
+        
+        return this;
+    }
+    
+    protected DAOGenerico<T> adicionaFiltro(String campo, StatusTransacao valor){
+        if(where.length() > 0)
+            where += " and ";
+        
+        where += campo + " = " + Integer.toString(valor.getId());
         
         return this;
     }

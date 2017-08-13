@@ -6,12 +6,13 @@
 package DSC.JROficina.Apresentacao;
 
 import DSC.JROficina.Aplicacao.ClienteRepositorio;
-import DSC.JROficina.Aplicacao.Compra;
+import DSC.JROficina.Aplicacao.ServicoRepositorio;
 import DSC.JROficina.Aplicacao.CompraRepositorio;
 import DSC.JROficina.Aplicacao.FornecedorRepositorio;
 import DSC.JROficina.Aplicacao.MotoRepositorio;
 import DSC.JROficina.Aplicacao.PecaRepositorio;
 import DSC.JROficina.Aplicacao.Repositorio;
+import DSC.JROficina.Aplicacao.Servico;
 import DSC.JROficina.Aplicacao.UsuarioRepositorio;
 import java.util.logging.Logger;
 import DSC.JROficina.Persistencia.ClienteDAO;
@@ -20,6 +21,7 @@ import DSC.JROficina.Persistencia.FornecedorDAO;
 import DSC.JROficina.Persistencia.MotoDAO;
 import DSC.JROficina.Persistencia.UsuarioDAO;
 import DSC.JROficina.Persistencia.PecaDAO;
+import DSC.JROficina.Persistencia.ServicoDAO;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
@@ -111,5 +113,21 @@ public class Repositorios {
             }
         return compraDAO;
     }
+
+    public static ServicoRepositorio servicoDAO = null; 
+
+    static Repositorio<Servico> getServicoRepositorio() {
+        if(servicoDAO == null)
+            try{
+                servicoDAO = new ServicoDAO();
+            }catch(ClassNotFoundException ex){
+                Logger.getLogger(Repositorios.class.getName()).log(Level.SEVERE, null, ex);
+            }catch(SQLException ex){
+                Logger.getLogger(Repositorios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return servicoDAO;
+    }
+
+
     
 }

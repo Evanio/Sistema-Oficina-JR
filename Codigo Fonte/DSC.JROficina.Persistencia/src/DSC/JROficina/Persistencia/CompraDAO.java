@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.text.SimpleDateFormat;
 
 
 
@@ -29,6 +30,7 @@ import java.sql.DriverManager;
 public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     
     PreparedStatement sql;
+    SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
 
     public CompraDAO() throws ClassNotFoundException, SQLException {
         super();
@@ -42,38 +44,33 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
     @Override
     protected String getConsultaInsert() {
-        return "insert into transacaofinanceira(idpessoa_fk, tipo, data, status, parcelas, valor_total, valor_pago) values(?,?,?,?,?,?,?)";
+        return "insert into transacaofinanceira(idpessoa_fk, tipo, data, status, parcelas, valor_total, valor_pago, vencimento) values(?,?,?,?,?,?,?,?)";
     }
 
     @Override
     protected String getConsultaUpdate() {
-        return ("update transacaofinanceira set idpessoa_fk = ?, tipo = ?, data = ?, status = ? where idtran_pk = ?");
+        return "update transacaofinanceira set idpessoa_fk = ?, tipo = ?, data = ?, status = ? where idtran_pk = ?";
     }
 
     @Override
     protected String getConsultaDelete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "delete from transacaofinanceira where idtran_pk = ?";
     }
     
     
 
     @Override
     protected String getConsultaAbrir() {
-         return "select transacaofinanceira.idtran_pk, transacaofinanceira.idpessoa_fk, transacaofinanceira.data, pessoas.idpessoa_pk,"
-            + " pessoas.nome, pessoas.telefone, pessoas.endereco, fornecedor.cnpj, fornecedor.idpessoa_fk,"
-            + " itemfinanceiro.iditem_pk, itemfinanceiro.valorunitario, pecas.nome, pecas.iditem_fk, pecas.marca,"
-            + " pecas.valor_compra, pecas.moto, tran_item.iditem_fk, tran_item.idtran_fk, tran_item.quantidade,"
-            + " tran_item.valor_total from pessoas join fornecedor on pessoas.idpessoa_pk = fornecedor.idpessoa_fk"
-            + " join transacaofinanceira on fornecedor.idpessoa_fk = transacaofinanceira.idpessoa_fk join tran_item"
-            + " on transacaofinanceira.idtran_pk = tran_item.idtran_fk join itemfinanceiro on tran_item.idtran_fk="
-            + " itemfinanceiro.iditem_pk join pecas on itemfinanceiro.iditem_pk = pecas.iditem_fk where ";
+         return "select transacaofinanceira.idtran_pk, transacaofinanceira.idpessoa_fk, transacaofinanceira.tipo,"
+            + " transacaofinanceira.data, transacaofinanceira.status, transacaofinanceira.parcelas, transacaofinanceira.valor_total,"
+                + " transacaofinanceira.valor_pago, transacaofinanceira.vencimento from transacaofinanceira where id =?";
     }
 
     @Override
     protected String getConsultaBuscar() {
         return "select transacaofinanceira.idtran_pk, transacaofinanceira.idpessoa_fk, transacaofinanceira.tipo,"
             + " transacaofinanceira.data, transacaofinanceira.status, transacaofinanceira.parcelas, transacaofinanceira.valor_total,"
-                + " transacaofinanceira.valor_pago from transacaofinanceira";
+                + " transacaofinanceira.valor_pago, transacaofinanceira.vencimento from transacaofinanceira";
     }
 
     @Override
@@ -92,6 +89,9 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
         if(filtro.getVencimento() != null)
            this.adicionaFiltro("transacaofinanceira.vencimento", filtro.getVencimento());
+        
+        if(filtro.getStatus() != null)
+            this.adicionaFiltro("transacaofinanceira.status", filtro.getStatus());
     }
 
     @Override
@@ -103,10 +103,11 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             sql.setInt(4, obj.getStatus().getId());
             sql.setInt(5, obj.getParcelas());
             sql.setDouble(6, obj.getValor());
-            sql.setFloat(7, (float) obj.getValor_parc());
+            sql.setFloat(7, (float) obj.getValor_pago());
+            sql.setDate(8, new java.sql.Date(obj.getVencimento().getTime()));
             
             if(obj.getId() > 0)
-                sql.setInt(8, obj.getId());
+                sql.setInt(9, obj.getId());
       
         }catch(SQLException ex){
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -125,7 +126,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             obj.setValor(resultado.getFloat("valor_total"));
             obj.setValor_pago(resultado.getFloat("valor_pago"));
             obj.setValor_parc((float) ((obj.getValor() - obj.getValor_pago()) / obj.getParcelas()));
-            //obj.setVencimento();
+            obj.setVencimento(resultado.getDate("vencimento"));
             return obj;
         }catch(Exception ex){
             Logger.getLogger(FornecedorDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -249,6 +250,19 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
         return null;
     }
     
+     public Compra Abrir(int id) {
+         Compra p = new Compra();
+         p.setId(id);
+         List<Compra> compra = this.Buscar(p);
+         if(compra != null){
+             for(Compra x : compra)
+                 return x;
+         }else
+             return null;
+         
+        return null;
+    }
+    
     protected void setParametros(PreparedStatement sql, Compra obj, Peca p) {
        
         try{
@@ -262,6 +276,27 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
        
     }
 
+    
+    public boolean Apagar(Compra obj){
+           try{
+            PreparedStatement sql = conexao.prepareStatement("delete from tran_item where idtran_fk = ?");
+            
+            sql.setInt(1, obj.getId());
+            
+            if(sql.executeUpdate() <= 0)
+                return false;
+       
+            if(!super.Apagar(obj))
+                return false;
+        }catch(Exception ex){
+            return false;    
+        }
+        obj = null;
+        return true;
+    }
+        
+        
+    
     @Override
     protected String getConsultaId() {
         return "select max(idtran_pk) as idtran_pk from transacaofinanceira";

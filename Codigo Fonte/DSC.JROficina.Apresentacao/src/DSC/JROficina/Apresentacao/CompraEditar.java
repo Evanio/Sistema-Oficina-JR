@@ -172,6 +172,11 @@ public class CompraEditar extends TelaEdicao<Compra>{
         });
 
         jButton3.setText("Apagar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("Valor Pago:");
 
@@ -325,7 +330,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
         
         float x = tot/(Integer)rolParcelas.getValue();
         txtParc.setText(String.valueOf(x));
-        this.carregaCampos();
+        this.carregaCampos2();
         
     }//GEN-LAST:event_bntAdcPecaActionPerformed
 
@@ -342,12 +347,16 @@ public class CompraEditar extends TelaEdicao<Compra>{
          }
        pecas.remove(k);
         preencheTabela(pecas);
-        this.carregaCampos();
+        this.carregaCampos2();
     }//GEN-LAST:event_btnRemoverPecaActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         Salvar();
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Apagar();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -380,15 +389,45 @@ public class CompraEditar extends TelaEdicao<Compra>{
 
     @Override
     public void carregaCampos() {
-       float x = (tot - Float.valueOf(txtPago.getText()));
+      
+        cbxFornecedor.setSelectedItem(entidade.getAliado());
+        txtData.setText(String.valueOf(formatarDate.format(entidade.getData())));
+        txtPago.setText(String.valueOf(entidade.getValor_pago()));
+        txtTroco.setText("0");
+        txtValorTotal.setText(String.valueOf(entidade.getValor()));
+        txtVencimento.setText(String.valueOf(formatarDate.format(entidade.getVencimento())));
+        rolParcelas.setValue(entidade.getParcelas());
+        preencheTabela(entidade.getPecas());
+        if(entidade.getValor() <= entidade.getValor_pago())
+            txtRestante.setText("0");
+        else{ 
+            txtRestante.setText(String.valueOf(entidade.getValor() - entidade.getValor_pago()));
+        }
+        
+    }
+
+    public void carregaCampos2(){
+       float x = 0;
+       txtRestante.setText(String.valueOf(tot));
+       if((Float.valueOf(txtPago.getText()) <= tot) && (Float.valueOf(txtPago.getText()) > 0)){
+            x = (tot - Float.valueOf(txtPago.getText()));
+            txtRestante.setText(String.valueOf(x));
+       }
+       if((Float.valueOf(txtPago.getText())) == 0)
+           x = tot;
+       
+       if((Float.valueOf(txtPago.getText()) > tot)){
+            x = (Float.valueOf(txtPago.getText())) - tot;
+            txtTroco.setText(String.valueOf(x));
+       }
+       
        int y = (Integer)rolParcelas.getValue();
        txtValorTotal.setText(String.valueOf(tot));
        txtParc.setText(String.valueOf(x / y));
-       txtRestante.setText(String.valueOf(x));
-       if(Float.valueOf(txtPago.getText()) > tot)
-           txtTroco.setText(String.valueOf(x * (-1)));
+         
+   
     }
-
+    
     @Override
     public void carregaObjeto() throws ViolacaoRegrasNegocioException {
            
@@ -408,7 +447,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
            entidade.setStatus(StatusTransacao.PAGO);
        else
            entidade.setStatus(StatusTransacao.PENDENTE);
-       entidade.setTipo(1);
+       entidade.setTipo(2);
     }
 
     @Override
