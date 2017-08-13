@@ -87,7 +87,7 @@ public class Compra implements Entidade{
         return valor;
     }
 
-    public void setValor(float valor) {
+    public void setValor(double valor) {
         this.valor = valor;
     }
 

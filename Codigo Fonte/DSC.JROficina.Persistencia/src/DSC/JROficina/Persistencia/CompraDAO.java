@@ -249,10 +249,6 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
         return null;
     }
     
-    
-    
-    
-    
     protected void setParametros(PreparedStatement sql, Compra obj, Peca p) {
        
         try{
@@ -269,12 +265,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     @Override
     protected String getConsultaId() {
         return "select max(idtran_pk) as idtran_pk from transacaofinanceira";
-    }
-
-     
-    
-    
-    
+    } 
     
 }
     
