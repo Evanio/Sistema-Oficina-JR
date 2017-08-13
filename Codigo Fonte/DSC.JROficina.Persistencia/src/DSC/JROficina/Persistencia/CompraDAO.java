@@ -138,7 +138,11 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
     public boolean Salvar(Compra obj) {
        List<Peca> p = obj.getPecas();
        
+       
         try{ 
+            PecaDAO pecadao = new PecaDAO();
+            Compra h = this.Abrir(obj.getId());
+            
             if(obj.getId() == 0){
                sql = conexao.prepareStatement(getConsultaInsert());
                 setParametros(sql, obj);
@@ -154,7 +158,19 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                     this.setParametros(sql, obj, c); 
                     if(sql.executeUpdate() <= 0) 
                         return false;
-                }                
+                }
+
+                for(Peca c : p){
+                    Peca peca = pecadao.Abrir(c.getId());
+                    peca.setFornecedor(c.getFornecedor());
+                    peca.setQtde(peca.getQtde() + c.getQtde());
+                    sql = conexao.prepareStatement(pecadao.getConsultaUpdate());
+                    pecadao.setParametros(sql, peca);               
+                    peca.setFornecedor(c.getFornecedor());
+
+                    if(sql.executeUpdate() <= 0) 
+                        return false;
+                    }
                 
             } else{
                 PreparedStatement sql = conexao.prepareStatement(getConsultaUpdate());
@@ -177,20 +193,24 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                    if(sql.executeUpdate() <= 0) 
                        return false;
                 } 
-                
-            }
-            PecaDAO pecadao = new PecaDAO();
             
+           
             for(Peca c : p){
                 Peca peca = pecadao.Abrir(c.getId());
+                for(Peca t : h.getPecas()){
+                    if(t.getId() == c.getId()){
+                       peca.setQtde((peca.getQtde() - t.getQtde()) + c.getQtde());
+                    }
+                }
                 peca.setFornecedor(c.getFornecedor());
-                peca.setQtde(peca.getQtde() + c.getQtde());
+                
                 sql = conexao.prepareStatement(pecadao.getConsultaUpdate());
                 pecadao.setParametros(sql, peca);
-                
+
                 if(sql.executeUpdate() <= 0) 
                     return false;
-             } 
+                }
+            }
            
             return true;
         }catch(Exception ex){
@@ -199,6 +219,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
       }
         
     
+    @Override
     public List<Compra> Buscar(Compra filtro) {
         
         List<Compra> lista = new ArrayList<>();
