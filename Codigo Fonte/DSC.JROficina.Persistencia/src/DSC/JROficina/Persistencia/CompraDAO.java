@@ -49,7 +49,8 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
     @Override
     protected String getConsultaUpdate() {
-        return "update transacaofinanceira set idpessoa_fk = ?, tipo = ?, data = ?, status = ? where idtran_pk = ?";
+        return "update transacaofinanceira set idpessoa_fk = ?, tipo = ?, data = ?, status = ?, parcelas = ?, valor_total = ?, valor_pago = ?,"
+                + " vencimento = ? where idtran_pk = ?";
     }
 
     @Override
@@ -102,7 +103,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             sql.setDate(3, new java.sql.Date(obj.getData().getTime())); 
             sql.setInt(4, obj.getStatus().getId());
             sql.setInt(5, obj.getParcelas());
-            sql.setDouble(6, obj.getValor());
+            sql.setDouble(6, (Double) obj.getValor());
             sql.setFloat(7, (float) obj.getValor_pago());
             sql.setDate(8, new java.sql.Date(obj.getVencimento().getTime()));
             
@@ -161,11 +162,11 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
                 if(sql.executeUpdate() <= 0)
                      return false;
-
-                sql = conexao.prepareStatement("delete tran_item where idtran_fk = ?");
+//passou
+                sql = conexao.prepareStatement("delete from tran_item where idtran_fk = ?");
                 sql.setInt(1, obj.getId());
 
-                if(sql.executeUpdate() <= 0)
+                if(sql.executeUpdate() <= 0)//aqui
                      return false;
 
 

@@ -142,6 +142,17 @@ public class CompraEditar extends TelaEdicao<Compra>{
 
         jLabel6.setText("Vencimento:");
 
+        rolParcelas.addHierarchyListener(new java.awt.event.HierarchyListener() {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+                rolParcelasHierarchyChanged(evt);
+            }
+        });
+        rolParcelas.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rolParcelasStateChanged(evt);
+            }
+        });
+
         txtVencimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtVencimentoActionPerformed(evt);
@@ -179,6 +190,20 @@ public class CompraEditar extends TelaEdicao<Compra>{
         });
 
         jLabel10.setText("Valor Pago:");
+
+        txtPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPagoActionPerformed(evt);
+            }
+        });
+        txtPago.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPagoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPagoKeyReleased(evt);
+            }
+        });
 
         jLabel11.setText("Valor Restante:");
 
@@ -358,6 +383,26 @@ public class CompraEditar extends TelaEdicao<Compra>{
         Apagar();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void rolParcelasHierarchyChanged(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_rolParcelasHierarchyChanged
+      this.carregaCampos2(); // TODO add your handling code here:
+    }//GEN-LAST:event_rolParcelasHierarchyChanged
+
+    private void rolParcelasStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rolParcelasStateChanged
+       this.carregaCampos2();// TODO add your handling code here:
+    }//GEN-LAST:event_rolParcelasStateChanged
+
+    private void txtPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPagoActionPerformed
+        this.carregaCampos2();// TODO add your handling code here:
+    }//GEN-LAST:event_txtPagoActionPerformed
+
+    private void txtPagoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPagoKeyPressed
+//        this.carregaCampos2();// TODO add your handling code here:
+    }//GEN-LAST:event_txtPagoKeyPressed
+
+    private void txtPagoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPagoKeyReleased
+    this.carregaCampos2();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPagoKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntAdcPeca;
@@ -407,25 +452,29 @@ public class CompraEditar extends TelaEdicao<Compra>{
     }
 
     public void carregaCampos2(){
-       float x = 0;
-       txtRestante.setText(String.valueOf(tot));
-       if((Float.valueOf(txtPago.getText()) <= tot) && (Float.valueOf(txtPago.getText()) > 0)){
-            x = (tot - Float.valueOf(txtPago.getText()));
-            txtRestante.setText(String.valueOf(x));
-       }
-       if((Float.valueOf(txtPago.getText())) == 0)
-           x = tot;
-       
-       if((Float.valueOf(txtPago.getText()) > tot)){
-            x = (Float.valueOf(txtPago.getText())) - tot;
-            txtTroco.setText(String.valueOf(x));
-       }
-       
-       int y = (Integer)rolParcelas.getValue();
-       txtValorTotal.setText(String.valueOf(tot));
-       txtParc.setText(String.valueOf(x / y));
-         
-   
+        txtTroco.setText("0");
+        if(tot > 0){
+            float x = 0;
+           txtRestante.setText(String.valueOf(tot));
+        if(!txtPago.getText().isEmpty()){
+           if((Float.valueOf(txtPago.getText()) <= tot) && (Float.valueOf(txtPago.getText()) > 0)){
+                x = (tot - Float.valueOf(txtPago.getText()));
+                txtRestante.setText(String.valueOf(x));
+           }
+           if((Float.valueOf(txtPago.getText())) == 0)
+               x = tot;
+
+           if((Float.valueOf(txtPago.getText()) > tot)){
+                x = (Float.valueOf(txtPago.getText())) - tot;
+                txtTroco.setText(String.valueOf(x));
+                txtRestante.setText("0");
+           }
+
+           int y = (Integer)rolParcelas.getValue();
+           txtValorTotal.setText(String.valueOf(tot));
+           txtParc.setText(String.valueOf(x / y));
+        }
+        }
     }
     
     @Override

@@ -243,6 +243,10 @@
     <Component class="javax.swing.JTextField" name="txtValorTotal">
     </Component>
     <Component class="javax.swing.JSpinner" name="rolParcelas">
+      <Events>
+        <EventHandler event="hierarchyChanged" listener="java.awt.event.HierarchyListener" parameters="java.awt.event.HierarchyEvent" handler="rolParcelasHierarchyChanged"/>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="rolParcelasStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="txtVencimento">
       <Events>
@@ -294,6 +298,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtPago">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPagoActionPerformed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPagoKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPagoKeyReleased"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel11">
       <Properties>
