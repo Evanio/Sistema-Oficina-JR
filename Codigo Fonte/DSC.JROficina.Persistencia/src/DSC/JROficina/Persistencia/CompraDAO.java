@@ -162,11 +162,11 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
 
                 if(sql.executeUpdate() <= 0)
                      return false;
-//passou
+
                 sql = conexao.prepareStatement("delete from tran_item where idtran_fk = ?");
                 sql.setInt(1, obj.getId());
 
-                if(sql.executeUpdate() <= 0)//aqui
+                if(sql.executeUpdate() <= 0)
                      return false;
 
 
@@ -228,7 +228,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                 while(resultado.next()){
                      PecaDAO pecadao;
                     try {
-                        pecadao = pecadao = new PecaDAO();
+                        pecadao = new PecaDAO();
                         Peca pe = pecadao.Abrir(resultado.getInt("iditem_fk"));
                         pe.setQtde(resultado.getInt("quantidade"));
                         pecas.add(pe); 
@@ -284,7 +284,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             
             sql.setInt(1, obj.getId());
             
-            if(sql.executeUpdate() <= 0)
+            if((sql.executeUpdate() <= 0) && obj.getPecas() == null)
                 return false;
        
             if(!super.Apagar(obj))

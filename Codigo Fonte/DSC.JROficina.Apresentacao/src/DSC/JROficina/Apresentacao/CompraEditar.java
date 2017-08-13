@@ -443,6 +443,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
         txtVencimento.setText(String.valueOf(formatarDate.format(entidade.getVencimento())));
         rolParcelas.setValue(entidade.getParcelas());
         preencheTabela(entidade.getPecas());
+        pecas = entidade.getPecas();
         if(entidade.getValor() <= entidade.getValor_pago())
             txtRestante.setText("0");
         else{ 
