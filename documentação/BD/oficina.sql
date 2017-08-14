@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 06-Ago-2017 às 02:46
+-- Generation Time: 14-Ago-2017 às 07:26
 -- Versão do servidor: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -46,6 +46,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `apaga_fornecedor` (`id` INTEGER)  b
 	delete from pessoas where idpessoa_pk = id;
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_servico` (`id` INTEGER)  begin
+	delete from itemfinanceiro where iditem_pk = id;
+	delete from servicos where iditem_fk = id;
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `inserirPeca` (`nomee` VARCHAR(50), `marcaa` VARCHAR(30), `valor_compraa` FLOAT, `valor_vendaa` FLOAT, `motoo` VARCHAR(50), `quantidade` INTEGER, `fornecedorr` VARCHAR(50))  begin 
 declare x integer;
 declare y integer;
@@ -60,6 +66,14 @@ declare y integer;
 		rollback;
 	end if;
 
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inserirServico` (`valor` FLOAT, `descricaoo` VARCHAR(50))  begin
+	declare x integer;
+
+	insert into itemfinanceiro (valorunitario) values (valor);
+	select max(iditem_pk) into x from itemfinanceiro;
+	insert into servicos(iditem_fk, descricao) values(x, descricaoo);
 end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `inserirUsuario` (`nomee` VARCHAR(40), `loginn` VARCHAR(15), `senhaa` VARCHAR(20))  begin
@@ -86,13 +100,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inserir_fornecedor` (`nomee` VARCHA
 	insert into fornecedor(idpessoa_fk, cnpj) values(x, cnpjj);
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePeca` (`nomee` VARCHAR(50), `marcaa` VARCHAR(30), `valor_compraa` FLOAT, `valor_vendaa` FLOAT, `motoo` VARCHAR(50), `qtde` INTEGER, `fornecedorr` VARCHAR(50), `id` INTEGER)  begin
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePeca` (`nomee` VARCHAR(50), `marcaa` VARCHAR(30), `valor_compraa` FLOAT, `valor_vendaa` FLOAT, `motoo` VARCHAR(50), `qtdee` INTEGER, `fornecedorr` VARCHAR(50), `id` INTEGER)  begin
 declare x integer;
 
 	update itemfinanceiro set valorunitario = valor_vendaa where iditem_pk = id;
 	update pecas set nome = nomee, marca = marcaa, valor_compra = valor_compraa, moto = motoo where iditem_fk = id;	
 	select fornecedor.idpessoa_fk into x from fornecedor join pessoas on fornecedor.idpessoa_fk = pessoas.idpessoa_pk where pessoas.nome = fornecedorr;  
-	update peca_tem_fornecedor set fornecedor_fk = x where peca_fk = id;
+	update peca_tem_fornecedor set fornecedor_fk = x, qtde = qtdee  where peca_fk = id;
 	
 end$$
 
@@ -112,6 +126,12 @@ end$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_fornecedor` (`nomee` VARCHAR(40), `telefonee` VARCHAR(12), `enderecoo` VARCHAR(50), `cnpjj` VARCHAR(12), `id` INTEGER)  begin
 	update pessoas set nome = nomee, telefone = telefonee, endereco = enderecoo where idpessoa_pk = id;
 	update fornecedor set cnpj = cnpjj where idpessoa_fk = id;
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_servico` (`valor` FLOAT, `descricaoo` VARCHAR(50), `id` INTEGER)  begin
+	update itemfinanceiro set valorunitario = valor where iditem_pk = id;
+	update servicos set descricao = descricaoo where iditem_fk = id;
 
 end$$
 
@@ -176,32 +196,12 @@ CREATE TABLE `itemfinanceiro` (
 --
 
 INSERT INTO `itemfinanceiro` (`iditem_pk`, `valorunitario`) VALUES
-(1, 15),
-(2, 9);
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `notafiscal`
---
-
-CREATE TABLE `notafiscal` (
-  `idtran_fk` int(11) NOT NULL,
-  `idnota_pk` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `parcelas`
---
-
-CREATE TABLE `parcelas` (
-  `idtran_fk` int(11) NOT NULL,
-  `quantidade` int(11) DEFAULT NULL,
-  `vencimento` date DEFAULT NULL,
-  `valor_mensal` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+(1, 152),
+(2, 9),
+(3, 10),
+(4, 10),
+(5, 10),
+(6, 10);
 
 -- --------------------------------------------------------
 
@@ -242,8 +242,8 @@ CREATE TABLE `peca_tem_fornecedor` (
 --
 
 INSERT INTO `peca_tem_fornecedor` (`fornecedor_fk`, `peca_fk`, `qtde`) VALUES
-(14, 1, 3),
-(14, 2, 3);
+(14, 1, 50),
+(14, 2, 140);
 
 -- --------------------------------------------------------
 
@@ -274,7 +274,7 @@ INSERT INTO `pessoas` (`idpessoa_pk`, `nome`, `telefone`, `endereco`) VALUES
 (14, 'Dois Irmaos Moto Peças', '1234', 'Rua x'),
 (41, 'Rodrigo', NULL, NULL),
 (42, 'Galpão das Motos', '9999999999', 'Rua 10'),
-(44, 'Tres Irmaos moto Pecas', '000000000', 'Rua X'),
+(44, 'Tres Irmaos moto Pecas', '000099', 'Rua X'),
 (45, 'Janio', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -288,6 +288,14 @@ CREATE TABLE `servicos` (
   `descricao` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Extraindo dados da tabela `servicos`
+--
+
+INSERT INTO `servicos` (`iditem_fk`, `descricao`) VALUES
+(5, 'troca oleo'),
+(6, 'Troca emrrolamento caixa de direcao');
+
 -- --------------------------------------------------------
 
 --
@@ -298,8 +306,22 @@ CREATE TABLE `transacaofinanceira` (
   `idtran_pk` int(11) NOT NULL,
   `idpessoa_fk` int(11) NOT NULL,
   `tipo` int(11) DEFAULT NULL,
-  `data` date DEFAULT NULL
+  `data` date DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `parcelas` int(11) DEFAULT NULL,
+  `valor_total` double DEFAULT NULL,
+  `valor_pago` float DEFAULT NULL,
+  `vencimento` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `transacaofinanceira`
+--
+
+INSERT INTO `transacaofinanceira` (`idtran_pk`, `idpessoa_fk`, `tipo`, `data`, `status`, `parcelas`, `valor_total`, `valor_pago`, `vencimento`) VALUES
+(80, 1, 2, '2017-08-14', 2, 1, 10, 0, '1212-12-13'),
+(81, 14, 1, '2017-08-13', 2, 1, 1520, 0, '2222-11-11'),
+(82, 1, 2, '2017-08-14', 2, 1, 460, 0, '2017-09-13');
 
 -- --------------------------------------------------------
 
@@ -310,9 +332,35 @@ CREATE TABLE `transacaofinanceira` (
 CREATE TABLE `tran_item` (
   `iditem_fk` int(11) NOT NULL,
   `idtran_fk` int(11) NOT NULL,
-  `quantidade` int(11) DEFAULT NULL,
-  `valor_total` double DEFAULT NULL
+  `quantidade` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `tran_item`
+--
+
+INSERT INTO `tran_item` (`iditem_fk`, `idtran_fk`, `quantidade`) VALUES
+(1, 81, 10),
+(2, 82, 10);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `tran_veiculo`
+--
+
+CREATE TABLE `tran_veiculo` (
+  `veiculo_fk` int(11) DEFAULT NULL,
+  `tran_fk` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `tran_veiculo`
+--
+
+INSERT INTO `tran_veiculo` (`veiculo_fk`, `tran_fk`) VALUES
+(1, 80),
+(1, 82);
 
 -- --------------------------------------------------------
 
@@ -358,19 +406,7 @@ INSERT INTO `veiculo` (`id`, `idpessoa_fk`, `placa`, `marca`, `ano`, `modelo`) V
 (2, 2, ' 1daf', ' xxadf', 1, 'nasdf'),
 (3, 3, '11', '213123', 12321, '12321'),
 (4, 2, 'gsx-xxx', 'Honda', 2000, 'Titan 150'),
-(5, 3, 'gsx-8888', 'Honda', 2008, 'Titan 125');
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `veiculo_item`
---
-
-CREATE TABLE `veiculo_item` (
-  `idveiculo_fk` varchar(9) NOT NULL,
-  `iditem_fk` int(11) NOT NULL,
-  `quantidade` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+(5, 3, 'gsx-8888', 'Honda', 2008, 'Titan 150');
 
 --
 -- Indexes for dumped tables
@@ -393,18 +429,6 @@ ALTER TABLE `fornecedor`
 --
 ALTER TABLE `itemfinanceiro`
   ADD PRIMARY KEY (`iditem_pk`);
-
---
--- Indexes for table `notafiscal`
---
-ALTER TABLE `notafiscal`
-  ADD PRIMARY KEY (`idtran_fk`,`idnota_pk`);
-
---
--- Indexes for table `parcelas`
---
-ALTER TABLE `parcelas`
-  ADD PRIMARY KEY (`idtran_fk`);
 
 --
 -- Indexes for table `pecas`
@@ -446,6 +470,13 @@ ALTER TABLE `tran_item`
   ADD KEY `idtran_fk` (`idtran_fk`);
 
 --
+-- Indexes for table `tran_veiculo`
+--
+ALTER TABLE `tran_veiculo`
+  ADD KEY `veiculo_fk` (`veiculo_fk`),
+  ADD KEY `tran_fk` (`tran_fk`);
+
+--
 -- Indexes for table `usuario`
 --
 ALTER TABLE `usuario`
@@ -459,13 +490,6 @@ ALTER TABLE `veiculo`
   ADD KEY `idpessoa_fk` (`idpessoa_fk`);
 
 --
--- Indexes for table `veiculo_item`
---
-ALTER TABLE `veiculo_item`
-  ADD PRIMARY KEY (`idveiculo_fk`,`iditem_fk`),
-  ADD KEY `iditem_fk` (`iditem_fk`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -473,7 +497,7 @@ ALTER TABLE `veiculo_item`
 -- AUTO_INCREMENT for table `itemfinanceiro`
 --
 ALTER TABLE `itemfinanceiro`
-  MODIFY `iditem_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `iditem_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `pessoas`
 --
@@ -483,7 +507,7 @@ ALTER TABLE `pessoas`
 -- AUTO_INCREMENT for table `transacaofinanceira`
 --
 ALTER TABLE `transacaofinanceira`
-  MODIFY `idtran_pk` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idtran_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 --
 -- AUTO_INCREMENT for table `veiculo`
 --
@@ -504,18 +528,6 @@ ALTER TABLE `clientes`
 --
 ALTER TABLE `fornecedor`
   ADD CONSTRAINT `fornecedor_ibfk_1` FOREIGN KEY (`idpessoa_fk`) REFERENCES `pessoas` (`idpessoa_pk`);
-
---
--- Limitadores para a tabela `notafiscal`
---
-ALTER TABLE `notafiscal`
-  ADD CONSTRAINT `notafiscal_ibfk_1` FOREIGN KEY (`idtran_fk`) REFERENCES `transacaofinanceira` (`idtran_pk`);
-
---
--- Limitadores para a tabela `parcelas`
---
-ALTER TABLE `parcelas`
-  ADD CONSTRAINT `parcelas_ibfk_1` FOREIGN KEY (`idtran_fk`) REFERENCES `transacaofinanceira` (`idtran_pk`);
 
 --
 -- Limitadores para a tabela `pecas`
@@ -550,6 +562,13 @@ ALTER TABLE `tran_item`
   ADD CONSTRAINT `tran_item_ibfk_2` FOREIGN KEY (`idtran_fk`) REFERENCES `transacaofinanceira` (`idtran_pk`);
 
 --
+-- Limitadores para a tabela `tran_veiculo`
+--
+ALTER TABLE `tran_veiculo`
+  ADD CONSTRAINT `tran_veiculo_ibfk_1` FOREIGN KEY (`veiculo_fk`) REFERENCES `veiculo` (`id`),
+  ADD CONSTRAINT `tran_veiculo_ibfk_2` FOREIGN KEY (`tran_fk`) REFERENCES `transacaofinanceira` (`idtran_pk`);
+
+--
 -- Limitadores para a tabela `usuario`
 --
 ALTER TABLE `usuario`
@@ -560,12 +579,6 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `veiculo`
   ADD CONSTRAINT `veiculo_ibfk_1` FOREIGN KEY (`idpessoa_fk`) REFERENCES `clientes` (`idpessoa_fk`);
-
---
--- Limitadores para a tabela `veiculo_item`
---
-ALTER TABLE `veiculo_item`
-  ADD CONSTRAINT `veiculo_item_ibfk_1` FOREIGN KEY (`iditem_fk`) REFERENCES `itemfinanceiro` (`iditem_pk`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
