@@ -262,12 +262,9 @@ public Servico adcServico(){
     public void preencheTabela(List<Servico> listagem) {
         DefaultTableModel modelo = new DefaultTableModel();
         
-        modelo.addColumn("ID");
-        modelo.addColumn("Nome");    
+        modelo.addColumn("ID"); 
         modelo.addColumn("Descrição");
-        modelo.addColumn("Estoque");
-        modelo.addColumn("Valor Unitario Compra");
-        modelo.addColumn("Marca");
+        modelo.addColumn("Valor");
         
          for(Servico c : listagem){
             Vector linha = new Vector();

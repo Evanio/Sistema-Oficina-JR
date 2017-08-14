@@ -26,41 +26,41 @@ public class ServicoDAO extends DAOGenerico<Servico> implements ServicoRepositor
     }
     @Override
     protected String getConsultaInsert() {
-        return "";
+        return "call inserirServico(?,?)"; //valor, desc
     }
 
     @Override
     protected String getConsultaUpdate() {
-        return ""; 
+        return "call  update_servico(?, ?, ?)"; //valor, desc, id
     }
 
     @Override
     protected String getConsultaDelete() {
-        return "";
+        return "call delete_servico(?)"; //id
     }
 
     @Override
     protected String getConsultaAbrir() {
-        return "select servicos.descricao, itemfinanceiro.valorunitario, itemfinanceiro.iditem_pk from servicos join "
-                + "itemfinanceiro on servicos.iditem_fk = itemfinanceiro.iditem_pk where servicos.iditem_fk = ";
+        return "select servicos.iditem_fk, servicos.descricao, itemfinanceiro.valorunitario, itemfinanceiro.iditem_pk from servicos join "
+                + "itemfinanceiro on servicos.iditem_fk = itemfinanceiro.iditem_pk where servicos.iditem_fk = ?";
     }
 
     @Override
     protected String getConsultaBuscar() {
-        return "select servicos.descricao, itemfinanceiro.valorunitario, itemfinanceiro.iditem_pk from servicos join "
+        return "select servicos.iditem_fk, servicos.descricao, itemfinanceiro.valorunitario, itemfinanceiro.iditem_pk from servicos join "
                 + "itemfinanceiro on servicos.iditem_fk = itemfinanceiro.iditem_pk ";
     }
 
     @Override
     protected void setBuscaFiltros(Servico filtro) {
         if(filtro.getId() > 0)
-            this.adicionaFiltro("iditem_fk", filtro.getId());
+            this.adicionaFiltro("servico.iditem_fk", filtro.getId());
         
         if(filtro.getDescricao() != null && !filtro.getDescricao().isEmpty())
-            this.adicionaFiltro("descricao", filtro.getDescricao());
+            this.adicionaFiltro("servico.descricao", filtro.getDescricao());
         
-        if(filtro.getValor() > -1)
-            this.adicionaFiltro("valorunitario", filtro.getValor());
+        if(filtro.getValor() > 0)
+            this.adicionaFiltro("servico.valorunitario", filtro.getValor());
     }
 
     @Override

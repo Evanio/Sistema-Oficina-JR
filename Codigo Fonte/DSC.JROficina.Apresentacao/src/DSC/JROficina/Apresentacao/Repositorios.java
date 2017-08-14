@@ -14,6 +14,7 @@ import DSC.JROficina.Aplicacao.PecaRepositorio;
 import DSC.JROficina.Aplicacao.Repositorio;
 import DSC.JROficina.Aplicacao.Servico;
 import DSC.JROficina.Aplicacao.UsuarioRepositorio;
+import DSC.JROficina.Aplicacao.VendaRepositorio;
 import java.util.logging.Logger;
 import DSC.JROficina.Persistencia.ClienteDAO;
 import DSC.JROficina.Persistencia.CompraDAO;
@@ -22,6 +23,7 @@ import DSC.JROficina.Persistencia.MotoDAO;
 import DSC.JROficina.Persistencia.UsuarioDAO;
 import DSC.JROficina.Persistencia.PecaDAO;
 import DSC.JROficina.Persistencia.ServicoDAO;
+import DSC.JROficina.Persistencia.VendaDAO;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
@@ -128,6 +130,18 @@ public class Repositorios {
         return servicoDAO;
     }
 
+    public static VendaRepositorio vendaDAO = null; 
 
+    public static VendaRepositorio getVendaRepositorio() {
+          if(vendaDAO == null)
+            try{
+                vendaDAO = new VendaDAO();
+            }catch(ClassNotFoundException ex){
+                Logger.getLogger(Repositorios.class.getName()).log(Level.SEVERE, null, ex);
+            }catch(SQLException ex){
+                Logger.getLogger(Repositorios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return vendaDAO;
+    }
     
 }

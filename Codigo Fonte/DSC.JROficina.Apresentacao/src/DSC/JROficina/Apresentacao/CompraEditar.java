@@ -497,7 +497,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
            entidade.setStatus(StatusTransacao.PAGO);
        else
            entidade.setStatus(StatusTransacao.PENDENTE);
-       entidade.setTipo(2);
+       entidade.setTipo(1);
     }
 
     @Override

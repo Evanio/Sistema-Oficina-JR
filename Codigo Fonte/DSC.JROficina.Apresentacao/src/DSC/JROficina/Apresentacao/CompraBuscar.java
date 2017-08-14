@@ -222,20 +222,22 @@ public class CompraBuscar extends TelaBusca<Compra>  {
         modelo.addColumn("Vencimento");
         
          for(Compra c : listagem){
-            Vector linha = new Vector();
-            linha.add(c.getId());
-            linha.add(c.getAliado().getNome());
-            linha.add(formatarDate.format(c.getData()));
-           
-            if(c.getValor_pago() >= c.getValor())
-                linha.add("Pago");
-            else
-                linha.add("Pendente");
-             linha.add(formatarDate.format(c.getVencimento()));
-            
-            modelo.addRow(linha);
-            
-        }    
+            if(c.getTipo() == 1){
+                Vector linha = new Vector();
+                linha.add(c.getId());
+                linha.add(c.getAliado().getNome());
+                linha.add(formatarDate.format(c.getData()));
+
+                if(c.getValor_pago() >= c.getValor())
+                    linha.add("Pago");
+                else
+                    linha.add("Pendente");
+                 linha.add(formatarDate.format(c.getVencimento()));
+
+                modelo.addRow(linha);
+
+            }
+        }
         tblBusca.setModel(modelo);
     }
 

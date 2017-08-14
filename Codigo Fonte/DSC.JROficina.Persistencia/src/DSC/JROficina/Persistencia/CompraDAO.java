@@ -128,6 +128,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
             obj.setValor_pago(resultado.getFloat("valor_pago"));
             obj.setValor_parc((float) ((obj.getValor() - obj.getValor_pago()) / obj.getParcelas()));
             obj.setVencimento(resultado.getDate("vencimento"));
+            obj.setTipo(resultado.getInt("tipo"));
             return obj;
         }catch(Exception ex){
             Logger.getLogger(FornecedorDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -243,7 +244,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
                 lista.add(this.setDados(resultado));
             
             for(Compra p : lista){
-                String consulta = "select iditem_fk, idtran_fk, quantidade from tran_item where idtran_fk = "+ String.valueOf(p.getId());
+                String consulta = "select iditem_fk, idtran_fk, quantidade from tran_item where idtran_fk = "+ String.valueOf(p.getId())+" and quantidade != 0";
                 sql =  conexao.prepareStatement(consulta);
                 resultado = sql.executeQuery();
                 while(resultado.next()){
