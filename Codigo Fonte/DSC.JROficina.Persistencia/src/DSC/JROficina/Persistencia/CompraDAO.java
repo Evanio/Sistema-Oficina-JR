@@ -93,6 +93,8 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
         
         if(filtro.getStatus() != null)
             this.adicionaFiltro("transacaofinanceira.status", filtro.getStatus());
+        
+        this.adicionaFiltro("transacaofinanceira.tipo", filtro.getTipo());
     }
 
     @Override
