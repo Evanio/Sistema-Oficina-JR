@@ -5,6 +5,7 @@
  */
 package DSC.JROficina.Persistencia;
 
+import DSC.JROficina.Aplicacao.TipoUsuario;
 import DSC.JROficina.Aplicacao.Usuario;
 import DSC.JROficina.Aplicacao.UsuarioRepositorio;
 import java.sql.PreparedStatement;
@@ -26,12 +27,12 @@ public class UsuarioDAO extends DAOGenerico<Usuario> implements UsuarioRepositor
 
     @Override
     protected String getConsultaInsert() {
-        return "call inserirUsuario(?,?,?)"; //nome, login, senha
+        return "call inserirUsuario(?,?,?,?)"; //nome, login, senha, tipo
     }
 
     @Override
     protected String getConsultaUpdate() {
-        return "call updateUsuario(?,?,?,?)"; //nome, login, senha, id
+        return "call updateUsuario(?,?,?,?,?)"; //nome, login, senha, tipo, id
     }
 
     @Override
@@ -41,13 +42,13 @@ public class UsuarioDAO extends DAOGenerico<Usuario> implements UsuarioRepositor
 
     @Override
     protected String getConsultaAbrir() {
-        return "select pessoas.idpessoa_pk, pessoas.nome, usuario.login, usuario.senha from pessoas join usuario"
+        return "select pessoas.idpessoa_pk, pessoas.nome, usuario.login, usuario.senha, usuario.tipo from pessoas join usuario"
         + " on pessoas.idpessoa_pk = usuario.idpessoa_fk where pessoas.idpessoa_pk = ?";
     }
 
     @Override
     protected String getConsultaBuscar() {
-        return "select pessoas.idpessoa_pk, pessoas.nome, usuario.login, usuario.senha from pessoas join usuario"
+        return "select pessoas.idpessoa_pk, pessoas.nome, usuario.login, usuario.senha, usuario.tipo from pessoas join usuario"
         + " on pessoas.idpessoa_pk = usuario.idpessoa_fk";
     }
 
@@ -68,6 +69,8 @@ public class UsuarioDAO extends DAOGenerico<Usuario> implements UsuarioRepositor
             this.adicionaFiltro("senha", filtro.getSenha());
         }
         
+        if(filtro.getTipo() != null)
+            this.adicionaFiltro("tipo", filtro.getTipo().getId());
     }
 
     @Override
@@ -78,9 +81,10 @@ public class UsuarioDAO extends DAOGenerico<Usuario> implements UsuarioRepositor
             String x = obj.getNome();
             sql.setString(2, obj.getLogin());
             sql.setString(3, obj.getSenha());
+            sql.setInt(4, obj.getTipo().getId());
             
             if(obj.getId() > 0){
-                sql.setInt(4, obj.getId());
+                sql.setInt(5, obj.getId());
             }
         }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,12 +95,11 @@ public class UsuarioDAO extends DAOGenerico<Usuario> implements UsuarioRepositor
     protected Usuario setDados(ResultSet resultado) {
         try{
             Usuario obj = new Usuario();
-        
-            
             obj.setNomee(resultado.getString("nome"));
             obj.setLogin(resultado.getString("login"));
             obj.setSenha(resultado.getString("senha"));
             obj.setId(resultado.getInt("idpessoa_pk"));
+            obj.setTipo(TipoUsuario.Abrir(resultado.getInt("tipo")));
             
             return obj;
         }catch(Exception ex){

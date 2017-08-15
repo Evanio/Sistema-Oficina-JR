@@ -51,7 +51,7 @@ public class VendaDAO extends DAOGenerico<Venda> implements VendaRepositorio{
 
     @Override
     protected String getConsultaDelete() {
-        return "delete from veiculo_tran where tran_fk = ?";
+        return "delete from transacaofinanceira where idtran_pk = ?";
     }
 
     @Override
@@ -177,7 +177,7 @@ public class VendaDAO extends DAOGenerico<Venda> implements VendaRepositorio{
                obj.setId(x);
                 setParametros(sql, obj);
                 
-                if(sql.executeUpdate() <= 0)
+                if(sql.executeUpdate() < 0)
                     return false;
         
                sql = conexao.prepareStatement("insert into tran_item(idtran_fk, iditem_fk, quantidade) values(?,?,?)"); 
@@ -352,7 +352,14 @@ public class VendaDAO extends DAOGenerico<Venda> implements VendaRepositorio{
 
         sql.setInt(1, obj.getId());
 
-        if((sql.executeUpdate() <= 0) && obj.getPecas() == null)
+        if((sql.executeUpdate() < 0) && obj.getPecas() == null)
+            return false;
+        
+        sql = conexao.prepareStatement("delete from tran_veiculo where tran_fk = ?");
+
+        sql.setInt(1, obj.getId());
+
+        if(sql.executeUpdate() < 0)
             return false;
 
         if(!super.Apagar(obj))

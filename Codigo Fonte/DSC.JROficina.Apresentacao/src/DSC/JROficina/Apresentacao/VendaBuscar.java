@@ -9,9 +9,11 @@ import DSC.JROficina.Aplicacao.Compra;
 import DSC.JROficina.Aplicacao.Cliente;
 import DSC.JROficina.Aplicacao.ClienteRepositorio;
 import DSC.JROficina.Aplicacao.Repositorio;
+import DSC.JROficina.Aplicacao.StatusTransacao;
 import DSC.JROficina.Aplicacao.Venda;
 import java.util.List;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -37,8 +39,8 @@ public class VendaBuscar extends TelaBusca<Venda> {
         
         ComboBoxModel modelo;
         modelo = new DefaultComboBoxModel(lista.toArray());
-       
-       // cbxStatus.setModel(model);
+        ComboBoxModel model = new DefaultComboBoxModel(StatusTransacao.values());
+        cbxStatus.setModel(model);
         cbxCliente.setModel(modelo);
     }
 
@@ -62,6 +64,7 @@ public class VendaBuscar extends TelaBusca<Venda> {
         jLabel4 = new javax.swing.JLabel();
         cbxCliente = new javax.swing.JComboBox<>();
         cbxStatus = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Venda Buscar");
@@ -115,6 +118,13 @@ public class VendaBuscar extends TelaBusca<Venda> {
 
         cbxStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jButton1.setText("Pagamento");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -134,17 +144,21 @@ public class VendaBuscar extends TelaBusca<Venda> {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fctData, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 629, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                                 .addGap(227, 227, 227)
                                 .addComponent(bntNovo, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                                 .addGap(216, 216, 216)
-                                .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)))
-                        .addGap(45, 45, 45)))
+                                .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                                .addGap(45, 45, 45)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -158,8 +172,13 @@ public class VendaBuscar extends TelaBusca<Venda> {
                     .addComponent(cbxStatus)
                     .addComponent(fctData)
                     .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(jButton1)))
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -186,6 +205,10 @@ public class VendaBuscar extends TelaBusca<Venda> {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         editar();
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     @Override
     public int retornaIdSelecionado() {
@@ -220,7 +243,8 @@ public class VendaBuscar extends TelaBusca<Venda> {
                 Vector linha = new Vector();
                 linha.add(c.getId());
                 linha.add(c.getAliado().getNome());
-                linha.add(c.getData());
+                SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
+                linha.add(String.valueOf(formatarDate.format(c.getData())));
                 if(c.getValor_pago() >= c.getValor())
                     linha.add("Pago");
                 else
@@ -250,6 +274,7 @@ public class VendaBuscar extends TelaBusca<Venda> {
     private javax.swing.JComboBox<String> cbxCliente;
     private javax.swing.JComboBox<String> cbxStatus;
     private javax.swing.JFormattedTextField fctData;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
