@@ -4,16 +4,19 @@
  * and open the template in the editor.
  */
 package DSC.JROficina.Apresentacao;
-
+import DSC.JROficina.Aplicacao.Aplicacao;
+import DSC.JROficina.Aplicacao.Usuario;
+import DSC.JROficina.Aplicacao.UsuarioRepositorio;
+import java.util.List;
 /**
  *
  * @author Rodrigo
  */
 public class TelaLogin extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TelaLogin
-     */
+    
+    UsuarioRepositorio dao = Repositorios.getUsuarioRepositorio();
+    
     public TelaLogin() {
         initComponents();
     }
@@ -32,18 +35,27 @@ public class TelaLogin extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtLogin = new javax.swing.JTextField();
         pwdSenha = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        btnLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JROficina - Login");
-
-        lblMensagem.setText("jLabel1");
 
         jLabel1.setText("Login:");
 
         jLabel2.setText("Senha:");
 
-        jButton1.setText("Efetuar Login");
+        pwdSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pwdSenhaActionPerformed(evt);
+            }
+        });
+
+        btnLogin.setText("Efetuar Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -64,7 +76,7 @@ public class TelaLogin extends javax.swing.JFrame {
                                 .addComponent(pwdSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(174, 174, 174)
-                        .addComponent(jButton1))
+                        .addComponent(btnLogin))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(204, 204, 204)
                         .addComponent(lblMensagem)))
@@ -83,13 +95,60 @@ public class TelaLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(pwdSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                .addComponent(btnLogin)
                 .addGap(60, 60, 60))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        Usuario p = new Usuario(0, null, String.valueOf(pwdSenha.getPassword()), txtLogin.getText());
+        
+        List<Usuario> lista = dao.Buscar(p);
+        
+        if(lista.isEmpty()){
+            lblMensagem.setText("Login ou senha incorretos!");
+        } else{
+            Aplicacao.setUsuario(lista.get(0));
+            
+            p = Aplicacao.getUsuario();
+            
+            TelaPrincipal principal = new TelaPrincipal(p);
+            
+            principal.setTelaLogin(this);
+            
+            principal.setVisible(true);
+            
+            this.setVisible(false);
+        }
+        
+        
+        
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void pwdSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwdSenhaActionPerformed
+        Usuario p = new Usuario(0, null, String.valueOf(pwdSenha.getPassword()), txtLogin.getText());
+        
+        List<Usuario> lista = dao.Buscar(p);
+        
+        if(lista.isEmpty()){
+            lblMensagem.setText("Login ou senha incorretos!");
+        } else{
+            Aplicacao.setUsuario(lista.get(0));
+            
+            p = Aplicacao.getUsuario();
+            
+            TelaPrincipal principal = new TelaPrincipal(p);
+            
+            principal.setTelaLogin(this);
+            
+            principal.setVisible(true);
+            
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_pwdSenhaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,7 +186,7 @@ public class TelaLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblMensagem;

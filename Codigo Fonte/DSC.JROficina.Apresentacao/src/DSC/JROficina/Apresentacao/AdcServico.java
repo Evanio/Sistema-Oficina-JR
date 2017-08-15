@@ -160,7 +160,7 @@ public class AdcServico extends javax.swing.JDialog {
                 setConfirmado(true);
                 dispose();
         }else{
-            JOptionPane.showMessageDialog(null, "Selecione uma  peça", "Erro", JOptionPane.ERROR_MESSAGE); 
+            JOptionPane.showMessageDialog(null, "Selecione um Servico!", "Erro", JOptionPane.ERROR_MESSAGE); 
         }
     }//GEN-LAST:event_BtnAdcPecaActionPerformed
 

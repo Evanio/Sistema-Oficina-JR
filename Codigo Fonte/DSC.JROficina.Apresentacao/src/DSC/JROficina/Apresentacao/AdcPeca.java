@@ -31,7 +31,7 @@ public class AdcPeca extends javax.swing.JDialog {
     public AdcPeca(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        txtQtde.setText(String.valueOf(0));
+        rolQtde.setValue(1);
     }
 
     public boolean isConfirmado() {
@@ -62,7 +62,6 @@ public class AdcPeca extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtQtde = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBusca = new javax.swing.JTable();
@@ -71,6 +70,7 @@ public class AdcPeca extends javax.swing.JDialog {
         BtnAdcPeca = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        rolQtde = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -112,6 +112,12 @@ public class AdcPeca extends javax.swing.JDialog {
             }
         });
 
+        rolQtde.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rolQtdeStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,7 +138,8 @@ public class AdcPeca extends javax.swing.JDialog {
                         .addGap(36, 36, 36)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtQtde, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(rolQtde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(71, 71, 71))
             .addGroup(layout.createSequentialGroup()
                 .addGap(283, 283, 283)
@@ -154,7 +161,7 @@ public class AdcPeca extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtQtde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rolQtde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnAdcPeca)
@@ -173,10 +180,10 @@ public class AdcPeca extends javax.swing.JDialog {
         int x = 0;
         x = retornaIdSelecionado();
         if(x > 0){      
-            if(Integer.valueOf((txtQtde.getText())) > 0){
+            if(((Integer) rolQtde.getValue()) > 0){
                 pecas = repositorio.Abrir(x);
                 pecas.setQtde(0);
-                pecas.setQtde(Integer.valueOf(txtQtde.getText()));
+                pecas.setQtde((Integer) rolQtde.getValue());
                 setConfirmado(true);
                 dispose();
             }else{
@@ -192,6 +199,13 @@ public class AdcPeca extends javax.swing.JDialog {
         dispose();
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void rolQtdeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rolQtdeStateChanged
+         if(((Integer)rolQtde.getValue()) == 0){
+            JOptionPane.showMessageDialog(null, "O numero minimo deve ser 1!", "Erro", JOptionPane.ERROR_MESSAGE);
+            rolQtde.setValue(1);
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_rolQtdeStateChanged
 
     /**
      * @param args the command line arguments
@@ -243,9 +257,9 @@ public class AdcPeca extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSpinner rolQtde;
     private javax.swing.JTable tblBusca;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JTextField txtQtde;
     // End of variables declaration//GEN-END:variables
 
 public void buscar(){
@@ -263,7 +277,7 @@ public Peca adcPeca(){
         Peca p = new Peca();
         PecaDAO pp = null;
         p = pp.Abrir(x);
-        p.setQtde(Integer.valueOf(txtQtde.getText()));
+        p.setQtde((Integer)rolQtde.getValue());
         
         return p;
     }

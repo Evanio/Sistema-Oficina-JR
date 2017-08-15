@@ -5,16 +5,52 @@
  */
 package DSC.JROficina.Apresentacao;
 
+import DSC.JROficina.Aplicacao.Aplicacao;
+import DSC.JROficina.Aplicacao.Usuario;
+
 /**
  *
  * @author Rodrigo
  */
 public class TelaPrincipal extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TelaPrincipal
-     */
+    
+    TelaLogin telalogin;
+    Usuario p;
+    public void setTelaLogin(TelaLogin telalogin){
+        this.telalogin = telalogin; 
+    }
+    
+    public TelaPrincipal(Usuario p) {
+        
+        if(!Aplicacao.isLogged()){
+            if(telalogin == null)
+                telalogin = new TelaLogin();
+            
+            telalogin.setVisible(true);
+            this.setVisible(false);
+            return;
+            
+        }
+        
+        this.p = p;
+        initComponents();
+        if(this.p.getTipo().getId() == 2)
+            mnuUsuario.setVisible(false);
+    }
+    
     public TelaPrincipal() {
+        
+        if(!Aplicacao.isLogged()){
+            if(telalogin == null)
+                telalogin = new TelaLogin();
+            
+            telalogin.setVisible(true);
+            this.setVisible(false);
+            return;
+            
+        }
+      
         initComponents();
     }
 
@@ -155,6 +191,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_MnuFornecedoresActionPerformed
 
     private void mnuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUsuarioActionPerformed
+        
+        
         UsuarioBuscar tela = new UsuarioBuscar(Repositorios.getUsuarioRepositorio(), UsuarioEditar.class);
         
         this.add(tela);

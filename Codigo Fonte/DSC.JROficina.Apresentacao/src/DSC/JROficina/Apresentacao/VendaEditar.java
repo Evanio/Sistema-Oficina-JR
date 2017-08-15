@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -34,22 +35,20 @@ import javax.swing.table.DefaultTableModel;
  * @author Rodrigo
  */
 public class VendaEditar extends TelaEdicao<Venda>{
-    Repositorio<Peca> p;
-    List<Peca> pecas;
-    List<Servico> servicos;
-    Peca pe;
-    Servico se;
-    SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
-    private float tot = 0;
-    private Date data;   
+    protected Repositorio<Peca> p;
+    protected List<Peca> pecas;
+    protected List<Servico> servicos;
+    protected Peca pe;
+    protected Servico se;
+    protected SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
+    protected float tot = 0;
+    protected Date data;   
     
-    ClienteRepositorio clientes = Repositorios.getClienteRepositorio();
-    MotoRepositorio motos = Repositorios.getMotoRepositorio();
+    protected ClienteRepositorio clientes = Repositorios.getClienteRepositorio();
+    protected MotoRepositorio motos = Repositorios.getMotoRepositorio();
     
      public VendaEditar() {
-        
-        initComponents();
-        
+               
         pecas = new ArrayList<>();
         servicos = new ArrayList<>();
         pe = new Peca();
@@ -57,6 +56,7 @@ public class VendaEditar extends TelaEdicao<Venda>{
         List<Cliente> lista = clientes.Buscar(null);
         lista.add(0, null);
         ComboBoxModel modelos = new DefaultComboBoxModel(lista.toArray());
+        initComponents();
         cbxCliente.setModel(modelos); 
         data = new Date(System.currentTimeMillis());   
         txtData.setText(String.valueOf(formatarDate.format(data)));
@@ -71,6 +71,7 @@ public class VendaEditar extends TelaEdicao<Venda>{
         txtRestante.setEnabled(false);
         txtParc.setEnabled(false);
         txtValorTotal.setEnabled(false);
+        
      }
         
     @SuppressWarnings("unchecked")
@@ -86,7 +87,7 @@ public class VendaEditar extends TelaEdicao<Venda>{
         btnRemoverPeca = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnApagar = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -163,7 +164,12 @@ public class VendaEditar extends TelaEdicao<Venda>{
 
         jLabel4.setText("Valor Total:");
 
-        jButton3.setText("Apagar");
+        btnApagar.setText("Apagar");
+        btnApagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApagarActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Parcelas:");
 
@@ -171,9 +177,31 @@ public class VendaEditar extends TelaEdicao<Venda>{
 
         jLabel6.setText("Vencimento:");
 
+        txtPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPagoActionPerformed(evt);
+            }
+        });
+        txtPago.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPagoKeyReleased(evt);
+            }
+        });
+
         jLabel1.setText("Cliente");
 
         jLabel11.setText("Valor Restante:");
+
+        rolParcelas.addHierarchyListener(new java.awt.event.HierarchyListener() {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+                rolParcelasHierarchyChanged(evt);
+            }
+        });
+        rolParcelas.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rolParcelasStateChanged(evt);
+            }
+        });
 
         jLabel12.setText("Troco:");
 
@@ -253,7 +281,7 @@ public class VendaEditar extends TelaEdicao<Venda>{
                                 .addGap(95, 95, 95)
                                 .addComponent(btnCancelar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton3))
+                                .addComponent(btnApagar))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -377,7 +405,7 @@ public class VendaEditar extends TelaEdicao<Venda>{
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCancelar)
-                            .addComponent(jButton3))
+                            .addComponent(btnApagar))
                         .addGap(35, 35, 35))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -499,17 +527,56 @@ public class VendaEditar extends TelaEdicao<Venda>{
             carregaCampos1();
     }//GEN-LAST:event_btnRservicoActionPerformed
 
+    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+        Apagar();// TODO add your handling code here:
+    }//GEN-LAST:event_btnApagarActionPerformed
+
+    private void rolParcelasStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rolParcelasStateChanged
+        if(((Integer)rolParcelas.getValue()) == 0){
+            JOptionPane.showMessageDialog(null, "O numero minimo de parcelas deve ser 1!", "Erro", JOptionPane.ERROR_MESSAGE);
+            rolParcelas.setValue(1);
+        }
+        this.carregaCampos1();// TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_rolParcelasStateChanged
+
+    private void rolParcelasHierarchyChanged(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_rolParcelasHierarchyChanged
+        this.carregaCampos1();
+    }//GEN-LAST:event_rolParcelasHierarchyChanged
+
+    private void txtPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPagoActionPerformed
+        if(!txtPago.getText().isEmpty()){
+            if(Integer.valueOf(txtPago.getText()) < 0){
+                JOptionPane.showMessageDialog(null, "O valor pago não pode ser negativo!", "Erro", JOptionPane.ERROR_MESSAGE);
+                txtPago.setText("0");
+            }
+            this.carregaCampos1();
+        }
+    }//GEN-LAST:event_txtPagoActionPerformed
+
+    private void txtPagoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPagoKeyReleased
+        if(!txtPago.getText().isEmpty() || txtPago.getText().equals("-")){
+            if(Integer.valueOf(txtPago.getText()) < 0){
+                JOptionPane.showMessageDialog(null, "O valor pago não pode ser negativo!", "Erro", JOptionPane.ERROR_MESSAGE);
+                txtPago.setText("0");
+            }
+
+                this.carregaCampos1();
+        }
+    }//GEN-LAST:event_txtPagoKeyReleased
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntAdcPeca;
     private javax.swing.JButton btnAdcServico;
+    private javax.swing.JButton btnApagar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRemoverPeca;
     private javax.swing.JButton btnRservico;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> cbxCliente;
     private javax.swing.JComboBox<String> cbxMoto;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -619,7 +686,7 @@ public class VendaEditar extends TelaEdicao<Venda>{
         
     }
     
-    public void preencheTabela1(List<Servico> listagem) {
+    protected void preencheTabela1(List<Servico> listagem) {
         DefaultTableModel modelo;
         modelo = new DefaultTableModel();
         
@@ -644,13 +711,13 @@ public class VendaEditar extends TelaEdicao<Venda>{
         
     }
     
-    public int retornaIdSelecionado() {
+    protected int retornaIdSelecionado() {
        int linha = tblPecas.getSelectedRow();
        int id = Integer.parseInt(tblPecas.getModel().getValueAt(linha,0).toString());
        return id;
     }
     
-    private void somaTotal(){
+    protected void somaTotal(){
         tot = 0;
         for(Peca i : pecas)
             tot += i.getValor_venda() * i.getQtde();
@@ -659,13 +726,38 @@ public class VendaEditar extends TelaEdicao<Venda>{
             tot += i.getValor();
     }
 
-    public void carregaCampos1() {
-       float x = (tot - Float.valueOf(txtPago.getText()));
+    protected void carregaCampos1() {
+     /*  float x = (tot - Float.valueOf(txtPago.getText()));
        int y = (Integer)rolParcelas.getValue();
        txtValorTotal.setText(String.valueOf(tot));
        txtParc.setText(String.valueOf(x / y));
        txtRestante.setText(String.valueOf(x));
        if(Float.valueOf(txtPago.getText()) > tot)
            txtTroco.setText(String.valueOf(x * (-1)));
+    }
+*/  
+       txtTroco.setText("0");
+        if(tot > 0){
+            float x = 0;
+            txtRestante.setText(String.valueOf(tot));
+            if(!txtPago.getText().isEmpty()){
+               if((Float.valueOf(txtPago.getText()) <= tot) && (Float.valueOf(txtPago.getText()) > 0)){
+                    x = (tot - Float.valueOf(txtPago.getText()));
+                    txtRestante.setText(String.valueOf(x));
+               }
+               if((Float.valueOf(txtPago.getText())) == 0)
+                   x = tot;
+
+               if((Float.valueOf(txtPago.getText()) > tot)){
+                    x = (Float.valueOf(txtPago.getText())) - tot;
+                    txtTroco.setText(String.valueOf(x));
+                    txtRestante.setText("0");
+               }
+
+               int y = (Integer)rolParcelas.getValue();
+               txtValorTotal.setText(String.valueOf(tot));
+               txtParc.setText(String.valueOf(x / y));
+            }
+        }
     }
 }

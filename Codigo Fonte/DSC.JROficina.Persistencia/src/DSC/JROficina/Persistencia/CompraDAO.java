@@ -83,7 +83,7 @@ public class CompraDAO extends DAOGenerico<Compra> implements CompraRepositorio{
            this.adicionaFiltro("tran_item.valor_toal", filtro.getValor());
         
         if(filtro.getData() != null)
-           this.adicionaFiltro("transacaofinanceira.data", filtro.getData());
+           this.adicionaFiltro("transacaofinanceira.data", new java.sql.Date(filtro.getData().getTime()));
         
         if(filtro.getAliado() != null)
            this.adicionaFiltro("transacaofinanceira.idpessoa_fk", filtro.getAliado().getId());

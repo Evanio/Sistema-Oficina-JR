@@ -7,9 +7,12 @@ package DSC.JROficina.Apresentacao;
 
 import DSC.JROficina.Aplicacao.Usuario;
 import DSC.JROficina.Aplicacao.Repositorio;
+import DSC.JROficina.Aplicacao.TipoUsuario;
 import DSC.JROficina.Aplicacao.ViolacaoRegrasNegocioException;
 import java.util.List;
 import java.util.Vector;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,6 +29,8 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
         super(repositorio, tipo_tela);
         initComponents();
         filtro = new Usuario();
+        ComboBoxModel model = new DefaultComboBoxModel(TipoUsuario.values());
+        cbxTipo.setModel(model);
     }
 
     /**
@@ -46,6 +51,8 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
         btnBusca = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        cbxTipo = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setTitle("Buscar Usuario");
@@ -88,6 +95,10 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
             }
         });
 
+        jLabel3.setText("Tipo:");
+
+        cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,15 +116,22 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
                         .addComponent(txtLogin)))
                 .addGap(54, 54, 54))
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBusca)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnNovo)
-                        .addGap(102, 102, 102)
-                        .addComponent(btnEditar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnBusca)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnNovo)
+                                .addGap(102, 102, 102)
+                                .addComponent(btnEditar))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -127,14 +145,18 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBusca)
                     .addComponent(btnNovo)
                     .addComponent(btnEditar))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
@@ -157,8 +179,10 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
     private javax.swing.JButton btnBusca;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnNovo;
+    private javax.swing.JComboBox<String> cbxTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblBusca;
     private javax.swing.JTextField txtLogin;
@@ -179,6 +203,8 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
             filtro.setNome(txtNome.getText());
         if(!txtLogin.getText().isEmpty())
             filtro.setLogin(txtLogin.getText());
+        if(cbxTipo.getSelectedItem() != null)
+            filtro.setTipo((TipoUsuario) cbxTipo.getSelectedItem());
     }
 
     @Override
@@ -188,6 +214,7 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
         modelo.addColumn("ID");
         modelo.addColumn("Nome");
         modelo.addColumn("Login");
+        modelo.addColumn("Tipo");
         
         for(Usuario u : listagem ){
             Vector linha = new Vector();
@@ -195,6 +222,7 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
             linha.add(u.getId());
             linha.add(u.getNome());
             linha.add(u.getLogin());
+            linha.add(u.getTipo().toString());
             
             modelo.addRow(linha);
         }

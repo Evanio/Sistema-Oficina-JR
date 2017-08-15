@@ -11,12 +11,15 @@ import DSC.JROficina.Aplicacao.FornecedorRepositorio;
 import DSC.JROficina.Aplicacao.Repositorio;
 import DSC.JROficina.Aplicacao.StatusTransacao;
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -204,7 +207,11 @@ public class CompraBuscar extends TelaBusca<Compra>  {
     public void preencheFiltro() {
         this.filtro = new Compra();
         if(!fctData.getText().isEmpty())
-            filtro.setData(Date.valueOf(fctData.getText()));
+            try {
+                filtro.setData((java.util.Date) formatarDate.parseObject(fctData.getText()));
+        } catch (ParseException ex) {
+            Logger.getLogger(CompraBuscar.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.filtro.setAliado((Fornecedor)cbxFornecedor.getSelectedItem());
         this.filtro.setStatus((StatusTransacao) cbxStatus.getSelectedItem());
 

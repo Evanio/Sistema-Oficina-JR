@@ -6,8 +6,10 @@
 package DSC.JROficina.Apresentacao;
 
 import DSC.JROficina.Aplicacao.Usuario;
+import DSC.JROficina.Aplicacao.TipoUsuario;
 import DSC.JROficina.Aplicacao.ViolacaoRegrasNegocioException;
-
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 /**
  *
  * @author Rodrigo
@@ -21,6 +23,8 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
         super();
         initComponents();
         
+        ComboBoxModel model = new DefaultComboBoxModel(TipoUsuario.values());
+        cbxTipo.setModel(model);
         entidade = new Usuario();
     }
 
@@ -42,6 +46,8 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
         btnSalvar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnApagar = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        cbxTipo = new javax.swing.JComboBox<>();
 
         jLabel1.setText("Nome:");
 
@@ -70,6 +76,10 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
             }
         });
 
+        jLabel4.setText("Tipo:");
+
+        cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,7 +104,11 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
                         .addGap(61, 61, 61)
                         .addComponent(btnCancelar)
                         .addGap(55, 55, 55)
-                        .addComponent(btnApagar)))
+                        .addComponent(btnApagar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -112,7 +126,11 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(pwdSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
                     .addComponent(btnCancelar)
@@ -140,9 +158,11 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
     private javax.swing.JButton btnApagar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JComboBox<String> cbxTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPasswordField pwdSenha;
     private javax.swing.JTextField txtLogin;
     private javax.swing.JTextField txtNome;
@@ -153,6 +173,7 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
         txtNome.setText(entidade.getNome());
         txtLogin.setText(entidade.getLogin());
         pwdSenha.setText(entidade.getSenha());
+        cbxTipo.setSelectedItem(entidade.getTipo().toString());
         
     }
 
@@ -161,6 +182,7 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
         entidade.setNomee(txtNome.getText());
         entidade.setLogin(txtLogin.getText());
         entidade.setSenha(String.copyValueOf( pwdSenha.getPassword()));
+        entidade.setTipo((TipoUsuario) cbxTipo.getSelectedItem());
     }
 
     @Override

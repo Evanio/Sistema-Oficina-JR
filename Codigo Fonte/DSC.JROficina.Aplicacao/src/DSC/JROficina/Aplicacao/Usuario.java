@@ -12,15 +12,17 @@ package DSC.JROficina.Aplicacao;
 public class Usuario extends Pessoa implements Entidade{
     private String senha;
     private String login;
+    private TipoUsuario tipo;
 
     public Usuario() {
         
     }
 
-    public Usuario(String senha, String login, String nome) {
+    public Usuario(String senha, String login, String nome, TipoUsuario tipo) {
         super(nome);
         this.senha = senha;
         this.login = login;
+        this.tipo = tipo;
     }
 
     public String getSenha() {
@@ -71,4 +73,15 @@ public class Usuario extends Pessoa implements Entidade{
         this.senha = senha;
         this.login = login;
     }
+
+    public TipoUsuario getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoUsuario tipo) {
+        this.tipo = tipo;
+    }
+
+    
+    
 }

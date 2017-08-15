@@ -396,7 +396,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
     }//GEN-LAST:event_txtPagoActionPerformed
 
     private void txtPagoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPagoKeyPressed
-//        this.carregaCampos2();// TODO add your handling code here:
+        this.carregaCampos2();// TODO add your handling code here:
     }//GEN-LAST:event_txtPagoKeyPressed
 
     private void txtPagoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPagoKeyReleased
@@ -456,25 +456,25 @@ public class CompraEditar extends TelaEdicao<Compra>{
         txtTroco.setText("0");
         if(tot > 0){
             float x = 0;
-           txtRestante.setText(String.valueOf(tot));
-        if(!txtPago.getText().isEmpty()){
-           if((Float.valueOf(txtPago.getText()) <= tot) && (Float.valueOf(txtPago.getText()) > 0)){
-                x = (tot - Float.valueOf(txtPago.getText()));
-                txtRestante.setText(String.valueOf(x));
-           }
-           if((Float.valueOf(txtPago.getText())) == 0)
-               x = tot;
+            txtRestante.setText(String.valueOf(tot));
+            if(!txtPago.getText().isEmpty()){
+               if((Float.valueOf(txtPago.getText()) <= tot) && (Float.valueOf(txtPago.getText()) > 0)){
+                    x = (tot - Float.valueOf(txtPago.getText()));
+                    txtRestante.setText(String.valueOf(x));
+               }
+               if((Float.valueOf(txtPago.getText())) == 0)
+                   x = tot;
 
-           if((Float.valueOf(txtPago.getText()) > tot)){
-                x = (Float.valueOf(txtPago.getText())) - tot;
-                txtTroco.setText(String.valueOf(x));
-                txtRestante.setText("0");
-           }
+               if((Float.valueOf(txtPago.getText()) > tot)){
+                    x = (Float.valueOf(txtPago.getText())) - tot;
+                    txtTroco.setText(String.valueOf(x));
+                    txtRestante.setText("0");
+               }
 
-           int y = (Integer)rolParcelas.getValue();
-           txtValorTotal.setText(String.valueOf(tot));
-           txtParc.setText(String.valueOf(x / y));
-        }
+               int y = (Integer)rolParcelas.getValue();
+               txtValorTotal.setText(String.valueOf(tot));
+               txtParc.setText(String.valueOf(x / y));
+            }
         }
     }
     
