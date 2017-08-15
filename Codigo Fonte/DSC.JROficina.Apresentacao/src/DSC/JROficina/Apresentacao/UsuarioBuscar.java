@@ -11,6 +11,8 @@ import DSC.JROficina.Aplicacao.TipoUsuario;
 import DSC.JROficina.Aplicacao.ViolacaoRegrasNegocioException;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -187,7 +189,9 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        editar();
+        if(retornaIdSelecionado() > -1)
+            editar();
+        limpaFiltro();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
@@ -211,8 +215,12 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
 
     @Override
     public int retornaIdSelecionado() {
-       int linha = tblBusca.getSelectedRow();
-       int id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       int linha = -1;
+       linha = tblBusca.getSelectedRow();
+       int id = -1;
+       if(linha > -1)
+            id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       
        return id;
     }
 
@@ -255,5 +263,6 @@ public class UsuarioBuscar extends TelaBusca<Usuario> {
         filtro.setId(0);
         filtro.setNome(null);
         filtro.setLogin(null);
+        filtro.setSenhaa(null);
     }
 }

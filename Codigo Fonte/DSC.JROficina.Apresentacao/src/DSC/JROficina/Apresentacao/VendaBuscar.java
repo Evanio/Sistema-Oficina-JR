@@ -214,17 +214,36 @@ public class VendaBuscar extends TelaBusca<Venda> {
     }//GEN-LAST:event_cbxClienteActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        editar();
+        if(retornaIdSelecionado() > -1)
+            editar();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+       /*
+        PagamentoVenda pag = new PagamentoVenda(retornaIdSelecionado());
+        
+        pag.setBusca(this);
+        
+        pag.setRepositorio(repositorio);
+        
+        pag.setEntidade(filtro);
+        
+        this.getParent().add(pag);
+        
+        pag.setVisible(true);
+        
+        this.setVisible(false);
+*/
     }//GEN-LAST:event_jButton1ActionPerformed
 
     @Override
     public int retornaIdSelecionado() {
-       int linha = tblBusca.getSelectedRow();
-       int id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       int linha = -1;
+       linha = tblBusca.getSelectedRow();
+       int id = -1;
+       if(linha > -1)
+            id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       
        return id;
     }
 
@@ -236,7 +255,7 @@ public class VendaBuscar extends TelaBusca<Venda> {
             filtro.setData(Date.valueOf(fctData.getText()));
 
         this.filtro.setAliado((Cliente)cbxCliente.getSelectedItem());
-        //this.filtro.setStatus((StatusTransacao) cbxFornecedor.getSelectedItem());
+        this.filtro.setStatus((StatusTransacao) cbxStatus.getSelectedItem());
     }
 
     @Override

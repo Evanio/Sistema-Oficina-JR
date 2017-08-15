@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 14-Ago-2017 às 07:26
+-- Generation Time: 15-Ago-2017 às 18:08
 -- Versão do servidor: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -76,12 +76,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inserirServico` (`valor` FLOAT, `de
 	insert into servicos(iditem_fk, descricao) values(x, descricaoo);
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inserirUsuario` (`nomee` VARCHAR(40), `loginn` VARCHAR(15), `senhaa` VARCHAR(20))  begin
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inserirUsuario` (`nomee` VARCHAR(40), `loginn` VARCHAR(15), `senhaa` VARCHAR(20), `tipoo` INTEGER)  begin
 	declare x integer;
 
 	insert into pessoas(nome) values (nomee);
 	select max(idpessoa_pk) into x from pessoas;
-	insert into usuario(idpessoa_fk, login, senha) values (x, loginn, senhaa);
+	insert into usuario(idpessoa_fk, login, senha, tipo) values (x, loginn, senhaa, tipoo);
 end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `inserir_cliente` (`nomee` VARCHAR(40), `telefonee` VARCHAR(12), `enderecoo` VARCHAR(50), `cpff` VARCHAR(12), `tipoo` VARCHAR(10))  begin	
@@ -110,10 +110,10 @@ declare x integer;
 	
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsuario` (`nomee` VARCHAR(40), `loginn` VARCHAR(15), `senhaa` VARCHAR(20), `id` INTEGER)  begin
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsuario` (`nomee` VARCHAR(40), `loginn` VARCHAR(15), `senhaa` VARCHAR(20), `tipoo` INTEGER, `id` INTEGER)  begin
 
 	update pessoas set nome = nomee where idpessoa_pk = id;
-	update usuario set login = loginn, senha = senhaa where idpessoa_fk = id;	
+	update usuario set login = loginn, senha = senhaa, tipo = tipoo where idpessoa_fk = id;	
 	
 end$$
 
@@ -155,10 +155,9 @@ CREATE TABLE `clientes` (
 
 INSERT INTO `clientes` (`idpessoa_fk`, `cpf`, `tipo`) VALUES
 (1, '13374077633', 1),
-(2, '0000000', 2),
+(2, '12345678911', 2),
 (3, '987654321', 1),
-(4, '12345123450', 1),
-(6, '39480000', 1);
+(48, '18519232133', 1);
 
 -- --------------------------------------------------------
 
@@ -177,8 +176,8 @@ CREATE TABLE `fornecedor` (
 
 INSERT INTO `fornecedor` (`idpessoa_fk`, `cnpj`) VALUES
 (14, '1111111'),
-(42, '1111111'),
-(44, '1111111');
+(42, '1231451678'),
+(44, '3321123112');
 
 -- --------------------------------------------------------
 
@@ -201,7 +200,8 @@ INSERT INTO `itemfinanceiro` (`iditem_pk`, `valorunitario`) VALUES
 (3, 10),
 (4, 10),
 (5, 10),
-(6, 10);
+(6, 10),
+(7, 25);
 
 -- --------------------------------------------------------
 
@@ -223,7 +223,8 @@ CREATE TABLE `pecas` (
 
 INSERT INTO `pecas` (`iditem_fk`, `nome`, `marca`, `valor_compra`, `moto`) VALUES
 (1, 'Lona Freio Traseira', 'Fabreck', 152, 'Titan 125adfdaf'),
-(2, 'Lampada Farol', 'ladsa', 9, 'Titan 150');
+(2, 'Lampada Farol', 'ladsa', 9, 'Titan 150'),
+(7, 'Camara de Ar', 'Levorin', 25, '18 x 100');
 
 -- --------------------------------------------------------
 
@@ -242,8 +243,9 @@ CREATE TABLE `peca_tem_fornecedor` (
 --
 
 INSERT INTO `peca_tem_fornecedor` (`fornecedor_fk`, `peca_fk`, `qtde`) VALUES
-(14, 1, 50),
-(14, 2, 140);
+(14, 1, 47),
+(14, 2, 140),
+(14, 7, 5);
 
 -- --------------------------------------------------------
 
@@ -266,16 +268,17 @@ INSERT INTO `pessoas` (`idpessoa_pk`, `nome`, `telefone`, `endereco`) VALUES
 (1, 'Rodrigo Marques', '91023746', 'Rua 15'),
 (2, 'Maria A', '1111111', 'Avenida A'),
 (3, 'Ritaa', '2222', 'Av. 18'),
-(4, 'Evanio', '12345678', 'Rua João Alves Ferreira bairro 6 n 190'),
-(6, 'Juliana', '9102300', 'Av. x'),
 (10, 'Ro', '11', 'Rua'),
 (11, 'Ro', '11', 'Rua'),
 (12, 'Ro', '11', 'Rua'),
 (14, 'Dois Irmaos Moto Peças', '1234', 'Rua x'),
-(41, 'Rodrigo', NULL, NULL),
 (42, 'Galpão das Motos', '9999999999', 'Rua 10'),
-(44, 'Tres Irmaos moto Pecas', '000099', 'Rua X'),
-(45, 'Janio', NULL, NULL);
+(44, 'Alvorada MotoPeças', '000099', 'Rua X'),
+(46, 'Rodrigo Marques', NULL, NULL),
+(48, 'Joao', '91853651', 'Rua 10'),
+(49, 'Janio', NULL, NULL),
+(51, 'Janio', NULL, NULL),
+(52, 'Usuario', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -319,9 +322,9 @@ CREATE TABLE `transacaofinanceira` (
 --
 
 INSERT INTO `transacaofinanceira` (`idtran_pk`, `idpessoa_fk`, `tipo`, `data`, `status`, `parcelas`, `valor_total`, `valor_pago`, `vencimento`) VALUES
-(80, 1, 2, '2017-08-14', 2, 1, 10, 0, '1212-12-13'),
-(81, 14, 1, '2017-08-13', 2, 1, 1520, 0, '2222-11-11'),
-(82, 1, 2, '2017-08-14', 2, 1, 460, 0, '2017-09-13');
+(83, 14, 1, '2017-08-14', 1, 1, 546, 546, '2019-09-15'),
+(86, 1, 2, '2017-08-14', 2, 2, 45, 43, '2017-09-15'),
+(87, 42, 1, '2017-08-15', 2, 1, 100, 0, '2017-09-15');
 
 -- --------------------------------------------------------
 
@@ -340,8 +343,10 @@ CREATE TABLE `tran_item` (
 --
 
 INSERT INTO `tran_item` (`iditem_fk`, `idtran_fk`, `quantidade`) VALUES
-(1, 81, 10),
-(2, 82, 10);
+(1, 83, 3),
+(2, 83, 10),
+(2, 86, 5),
+(7, 87, 4);
 
 -- --------------------------------------------------------
 
@@ -359,8 +364,7 @@ CREATE TABLE `tran_veiculo` (
 --
 
 INSERT INTO `tran_veiculo` (`veiculo_fk`, `tran_fk`) VALUES
-(1, 80),
-(1, 82);
+(1, 86);
 
 -- --------------------------------------------------------
 
@@ -371,16 +375,19 @@ INSERT INTO `tran_veiculo` (`veiculo_fk`, `tran_fk`) VALUES
 CREATE TABLE `usuario` (
   `idpessoa_fk` int(11) NOT NULL,
   `login` varchar(15) NOT NULL,
-  `senha` varchar(20) NOT NULL
+  `senha` varchar(20) NOT NULL,
+  `tipo` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `usuario`
 --
 
-INSERT INTO `usuario` (`idpessoa_fk`, `login`, `senha`) VALUES
-(41, 'digoleeke', '12345678'),
-(45, 'janiooo', '12345678');
+INSERT INTO `usuario` (`idpessoa_fk`, `login`, `senha`, `tipo`) VALUES
+(46, 'digoleeke', 'r06092010', 1),
+(49, 'digo', '1234567', 1),
+(51, 'digo', '1234567', 2),
+(52, 'funcionario01', '123456', 2);
 
 -- --------------------------------------------------------
 
@@ -497,17 +504,17 @@ ALTER TABLE `veiculo`
 -- AUTO_INCREMENT for table `itemfinanceiro`
 --
 ALTER TABLE `itemfinanceiro`
-  MODIFY `iditem_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `iditem_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `pessoas`
 --
 ALTER TABLE `pessoas`
-  MODIFY `idpessoa_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `idpessoa_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 --
 -- AUTO_INCREMENT for table `transacaofinanceira`
 --
 ALTER TABLE `transacaofinanceira`
-  MODIFY `idtran_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `idtran_pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 --
 -- AUTO_INCREMENT for table `veiculo`
 --

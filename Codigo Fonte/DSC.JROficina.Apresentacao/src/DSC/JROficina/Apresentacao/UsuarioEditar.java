@@ -190,7 +190,7 @@ public class UsuarioEditar extends TelaEdicao<Usuario> {
         txtNome.setText(entidade.getNome());
         txtLogin.setText(entidade.getLogin());
         pwdSenha.setText(entidade.getSenha());
-        cbxTipo.setSelectedItem(entidade.getTipo().toString());
+        cbxTipo.setSelectedItem(entidade.getTipo());
         
     }
 

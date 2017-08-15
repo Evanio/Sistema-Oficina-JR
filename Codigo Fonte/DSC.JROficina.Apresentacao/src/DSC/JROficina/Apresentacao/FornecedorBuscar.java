@@ -196,7 +196,7 @@ public class FornecedorBuscar extends TelaBusca<Fornecedor> {
     }//GEN-LAST:event_txtCnpjActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        buscar();
+         buscar();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
@@ -204,7 +204,8 @@ public class FornecedorBuscar extends TelaBusca<Fornecedor> {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        editar();
+        if(retornaIdSelecionado() > -1)    
+            editar();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     
@@ -228,8 +229,12 @@ public class FornecedorBuscar extends TelaBusca<Fornecedor> {
 
     @Override
     public int retornaIdSelecionado() {
-       int linha = tblBusca.getSelectedRow();
-       int id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       int linha = -1;
+       linha = tblBusca.getSelectedRow();
+       int id = -1;
+       if(linha > -1)
+            id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       
        return id;
     }
 

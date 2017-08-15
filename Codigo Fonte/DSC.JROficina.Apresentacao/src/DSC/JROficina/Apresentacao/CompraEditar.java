@@ -366,7 +366,7 @@ public class CompraEditar extends TelaEdicao<Compra>{
     }//GEN-LAST:event_txtVencimentoActionPerformed
 
     private void bntAdcPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntAdcPecaActionPerformed
-        AdcPeca adcpeca = new AdcPeca(new JFrame(), true);
+        AdcPeca adcpeca = new AdcPeca(new JFrame(), true, 1);
         adcpeca.setVisible(true);
         
         if(adcpeca.isConfirmado()){

@@ -62,6 +62,10 @@ public class Usuario extends Pessoa implements Entidade{
             
         this.senha = senha;
     }
+    
+    public void setSenhaa(String senha){
+        this.senha = senha;
+    }
 
     public void setLogin(String login) {
         this.login = login;

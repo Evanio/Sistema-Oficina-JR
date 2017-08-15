@@ -156,13 +156,18 @@ public class ServicoBuscar extends TelaBusca<Servico> {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        editar();
+        if(retornaIdSelecionado() > -1)   
+            editar();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     @Override
     public int retornaIdSelecionado() {
-       int linha = tblBusca.getSelectedRow();
-       int id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       int linha = -1;
+       linha = tblBusca.getSelectedRow();
+       int id = -1;
+       if(linha > -1)
+            id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       
        return id;
     }
 

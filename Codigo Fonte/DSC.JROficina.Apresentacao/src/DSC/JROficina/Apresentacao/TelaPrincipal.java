@@ -64,22 +64,32 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu1 = new javax.swing.JMenu();
+        btnSair = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuCadastro = new javax.swing.JMenu();
         mnuClientes = new javax.swing.JMenuItem();
         MnuFornecedores = new javax.swing.JMenuItem();
         mnuUsuario = new javax.swing.JMenuItem();
         mnuPecas = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        MnuServicos = new javax.swing.JMenuItem();
         mnuMotos = new javax.swing.JMenuItem();
-        mnuCompras = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        mnuB = new javax.swing.JMenuItem();
+        mnuV = new javax.swing.JMenu();
+        mnuVA = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela Principal");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        btnSair.setText("Sair");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSairActionPerformed(evt);
+            }
+        });
 
         mnuCadastro.setText("Cadastros");
         mnuCadastro.addActionListener(new java.awt.event.ActionListener() {
@@ -120,13 +130,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         mnuCadastro.add(mnuPecas);
 
-        jMenuItem2.setText("Servicos");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        MnuServicos.setText("Servicos");
+        MnuServicos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                MnuServicosActionPerformed(evt);
             }
         });
-        mnuCadastro.add(jMenuItem2);
+        mnuCadastro.add(MnuServicos);
 
         mnuMotos.setText("Motos");
         mnuMotos.addActionListener(new java.awt.event.ActionListener() {
@@ -136,23 +146,36 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         mnuCadastro.add(mnuMotos);
 
-        mnuCompras.setText("Compras");
-        mnuCompras.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuComprasActionPerformed(evt);
-            }
-        });
-        mnuCadastro.add(mnuCompras);
-
-        jMenuItem1.setText("Vendas");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        mnuCadastro.add(jMenuItem1);
-
         jMenuBar1.add(mnuCadastro);
+
+        jMenu2.setText("Compras");
+
+        mnuB.setText("Buscar");
+        mnuB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuBActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mnuB);
+
+        jMenuBar1.add(jMenu2);
+
+        mnuV.setText("Vendas");
+        mnuV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuVActionPerformed(evt);
+            }
+        });
+
+        mnuVA.setText("Buscar");
+        mnuVA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuVAActionPerformed(evt);
+            }
+        });
+        mnuV.add(mnuVA);
+
+        jMenuBar1.add(mnuV);
 
         setJMenuBar(jMenuBar1);
 
@@ -160,11 +183,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 733, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(672, Short.MAX_VALUE)
+                .addComponent(btnSair)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 528, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(btnSair)
+                .addGap(0, 505, Short.MAX_VALUE))
         );
 
         pack();
@@ -214,26 +242,42 @@ public class TelaPrincipal extends javax.swing.JFrame {
         tela.setVisible(true);
     }//GEN-LAST:event_mnuMotosActionPerformed
 
-    private void mnuComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuComprasActionPerformed
-       CompraBuscar tela = new CompraBuscar(Repositorios.getCompraRepositorio(), CompraEditar.class);
-        
-        this.add(tela);
-        tela.setVisible(true);
-    }//GEN-LAST:event_mnuComprasActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       VendaBuscar tela = new VendaBuscar(Repositorios.getVendaRepositorio(), VendaEditar.class);
-        
-        this.add(tela);
-        tela.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void MnuServicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuServicosActionPerformed
        ServicoBuscar tela = new ServicoBuscar(Repositorios.getServicoRepositorio(), ServicoEditar.class);
         
         this.add(tela);
         tela.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_MnuServicosActionPerformed
+
+    private void mnuBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBActionPerformed
+        CompraBuscar tela = new CompraBuscar(Repositorios.getCompraRepositorio(), CompraEditar.class);
+        
+        this.add(tela);
+        tela.setVisible(true);
+    }//GEN-LAST:event_mnuBActionPerformed
+
+    private void mnuVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuVActionPerformed
+        VendaBuscar tela = new VendaBuscar(Repositorios.getVendaRepositorio(), VendaEditar.class);
+        
+        this.add(tela);
+        tela.setVisible(true);
+    }//GEN-LAST:event_mnuVActionPerformed
+
+    private void mnuVAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuVAActionPerformed
+        VendaBuscar tela = new VendaBuscar(Repositorios.getVendaRepositorio(), VendaEditar.class);
+        
+        this.add(tela);
+        tela.setVisible(true);
+    }//GEN-LAST:event_mnuVAActionPerformed
+
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        telalogin = new TelaLogin();
+            
+            telalogin.setVisible(true);
+            this.setVisible(false);
+            this.p = p;
+            return;          
+    }//GEN-LAST:event_btnSairActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,15 +316,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MnuFornecedores;
+    private javax.swing.JMenuItem MnuServicos;
+    private javax.swing.JButton btnSair;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem mnuB;
     private javax.swing.JMenu mnuCadastro;
     private javax.swing.JMenuItem mnuClientes;
-    private javax.swing.JMenuItem mnuCompras;
     private javax.swing.JMenuItem mnuMotos;
     private javax.swing.JMenuItem mnuPecas;
     private javax.swing.JMenuItem mnuUsuario;
+    private javax.swing.JMenu mnuV;
+    private javax.swing.JMenuItem mnuVA;
     // End of variables declaration//GEN-END:variables
 }

@@ -234,7 +234,8 @@ public class ClienteBuscar extends TelaBusca<Cliente> {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        editar();
+        if(retornaIdSelecionado() > -1)
+            editar();
     }//GEN-LAST:event_btnEditarActionPerformed
 
 
@@ -259,8 +260,12 @@ public class ClienteBuscar extends TelaBusca<Cliente> {
 
     @Override
     public int retornaIdSelecionado() {
-       int linha = tblBusca.getSelectedRow();
-       int id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       int linha = -1;
+       linha = tblBusca.getSelectedRow();
+       int id = -1;
+       if(linha > -1)
+            id = Integer.parseInt(tblBusca.getModel().getValueAt(linha,0).toString());
+       
        return id;
     }
     

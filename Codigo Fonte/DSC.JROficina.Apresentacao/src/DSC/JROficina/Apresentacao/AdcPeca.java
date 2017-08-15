@@ -25,9 +25,18 @@ public class AdcPeca extends javax.swing.JDialog {
     Repositorio<Peca> repositorio = Repositorios.getPecaRepositorio();
     private boolean confirmado = false;
     Peca pecas;
+    private int diferencia;
     
     
- 
+    //1 compra
+    //2 venda
+    public AdcPeca(java.awt.Frame parent, boolean modal, int diferencia) {
+        super(parent, modal);
+        initComponents();
+        rolQtde.setValue(1);
+        this.diferencia = diferencia;
+    }
+    
     public AdcPeca(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -188,18 +197,42 @@ public class AdcPeca extends javax.swing.JDialog {
     private void BtnAdcPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAdcPecaActionPerformed
         int x = 0;
         x = retornaIdSelecionado();
-        if(x > 0){      
-            if(((Integer) rolQtde.getValue()) > 0){
-                pecas = repositorio.Abrir(x);
-                pecas.setQtde(0);
-                pecas.setQtde((Integer) rolQtde.getValue());
-                setConfirmado(true);
-                dispose();
+        if(diferencia == 1){
+            if(x > 0){      
+                if(((Integer) rolQtde.getValue()) > 0){
+                    pecas = repositorio.Abrir(x);
+                    int h = pecas.getQtde();
+                    pecas.setQtde(0);
+                    pecas.setQtde((Integer) rolQtde.getValue());
+                    setConfirmado(true);
+                    dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, "A quantidade deve ser maior que 0", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             }else{
-                JOptionPane.showMessageDialog(null, "A quantidade deve ser maior que 0", "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Selecione uma  peça", "Erro", JOptionPane.ERROR_MESSAGE); 
             }
         }else{
-            JOptionPane.showMessageDialog(null, "Selecione uma  peça", "Erro", JOptionPane.ERROR_MESSAGE); 
+            if(x > 0){      
+                if(((Integer) rolQtde.getValue()) > 0){
+                    pecas = repositorio.Abrir(x);
+                    
+                    if(pecas.getQtde() >= ((Integer) rolQtde.getValue())){
+                        pecas.setQtde(0);
+                        pecas.setQtde((Integer) rolQtde.getValue());
+                        setConfirmado(true);
+                        dispose();
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Estoque insuficiente!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "A quantidade deve ser maior que 0", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Selecione uma  peça", "Erro", JOptionPane.ERROR_MESSAGE); 
+            }
+     
+            
         }
     }//GEN-LAST:event_BtnAdcPecaActionPerformed
 
