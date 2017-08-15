@@ -44,12 +44,6 @@ public class TelaLogin extends javax.swing.JFrame {
 
         jLabel2.setText("Senha:");
 
-        pwdSenha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pwdSenhaActionPerformed(evt);
-            }
-        });
-
         btnLogin.setText("Efetuar Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,13 +102,11 @@ public class TelaLogin extends javax.swing.JFrame {
         
         List<Usuario> lista = dao.Buscar(p);
         
-        if(lista.isEmpty()){
-            lblMensagem.setText("Login ou senha incorretos!");
-        } else{
+        if(lista.isEmpty() || p.getSenha().isEmpty() || p.getLogin().isEmpty()){
+            lblMensagem.setText("Login e/ou senha incorreto(s)!");
+        }else{
             Aplicacao.setUsuario(lista.get(0));
-            
-            p = Aplicacao.getUsuario();
-            
+            p = lista.get(0);
             TelaPrincipal principal = new TelaPrincipal(p);
             
             principal.setTelaLogin(this);
@@ -123,32 +115,7 @@ public class TelaLogin extends javax.swing.JFrame {
             
             this.setVisible(false);
         }
-        
-        
-        
     }//GEN-LAST:event_btnLoginActionPerformed
-
-    private void pwdSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwdSenhaActionPerformed
-        Usuario p = new Usuario(0, null, String.valueOf(pwdSenha.getPassword()), txtLogin.getText());
-        
-        List<Usuario> lista = dao.Buscar(p);
-        
-        if(lista.isEmpty()){
-            lblMensagem.setText("Login ou senha incorretos!");
-        } else{
-            Aplicacao.setUsuario(lista.get(0));
-            
-            p = Aplicacao.getUsuario();
-            
-            TelaPrincipal principal = new TelaPrincipal(p);
-            
-            principal.setTelaLogin(this);
-            
-            principal.setVisible(true);
-            
-            this.setVisible(false);
-        }
-    }//GEN-LAST:event_pwdSenhaActionPerformed
 
     /**
      * @param args the command line arguments

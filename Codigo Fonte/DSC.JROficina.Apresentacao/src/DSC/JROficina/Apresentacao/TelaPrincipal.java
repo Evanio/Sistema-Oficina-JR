@@ -17,6 +17,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     TelaLogin telalogin;
     Usuario p;
+
     public void setTelaLogin(TelaLogin telalogin){
         this.telalogin = telalogin; 
     }
@@ -29,17 +30,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
             
             telalogin.setVisible(true);
             this.setVisible(false);
-            return;
-            
+            this.p = p;
+            return;          
         }
         
-        this.p = p;
         initComponents();
-        if(this.p.getTipo().getId() == 2)
+        if(p.getTipo().getId() == 2)
             mnuUsuario.setVisible(false);
     }
     
-    public TelaPrincipal() {
+     public TelaPrincipal() {
         
         if(!Aplicacao.isLogged()){
             if(telalogin == null)
@@ -47,13 +47,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
             
             telalogin.setVisible(true);
             this.setVisible(false);
-            return;
-            
+         
+            return;          
         }
-      
+        
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

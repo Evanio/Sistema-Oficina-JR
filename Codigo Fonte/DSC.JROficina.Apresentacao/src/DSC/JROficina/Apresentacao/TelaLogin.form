@@ -92,9 +92,6 @@
     <Component class="javax.swing.JTextField" name="txtLogin">
     </Component>
     <Component class="javax.swing.JPasswordField" name="pwdSenha">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pwdSenhaActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnLogin">
       <Properties>
